@@ -2,6 +2,7 @@
 #define PDDL_PARSER_INSTANCE_H
 
 #include <deque>
+#include <unordered_map>
 #include <string>
 
 #include "domain.hh"
@@ -13,7 +14,7 @@ class Instance {
     std::string name;
     Domain &domain;
     std::deque<std::string> requirements;
-    std::deque<TypedName> objects;
+    std::unordered_map<std::string, TypedName> objects;
     State init;
     std::unique_ptr<Condition> goal;
 
@@ -21,7 +22,7 @@ public:
     Instance(std::string &&name,
              Domain &domain,
              std::deque<std::string> &&requirements,
-             std::deque<TypedName> &&objects,
+             std::unordered_map<std::string, TypedName> &&objects,
              State &&init,
              std::unique_ptr<Condition> &&goal);
 };

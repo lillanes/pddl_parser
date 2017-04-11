@@ -3,21 +3,21 @@
 
 #include <deque>
 #include <iostream>
+#include <unordered_map>
 #include <string>
 
 #include "action.hh"
 #include "function.hh"
 #include "predicate.hh"
 #include "typed_name.hh"
-#include "type.hh"
 
 namespace pddl_parser {
 
 class Domain {
     std::string name;
     std::deque<std::string> requirements;
-    Types types;
-    std::deque<TypedName> constants;
+    std::unordered_map<std::string, TypedName> types;
+    std::unordered_map<std::string, TypedName> constants;
     std::deque<Predicate> predicates;
     std::deque<Function> functions;
     std::deque<Action> actions;
@@ -25,8 +25,8 @@ class Domain {
 public:
     Domain(std::string &&name,
            std::deque<std::string> &&requirements,
-           Types &&types,
-           std::deque<TypedName> &&constants,
+           std::unordered_map<std::string, TypedName> &&types,
+           std::unordered_map<std::string, TypedName> &&constants,
            std::deque<Predicate> &&predicates,
            std::deque<Function> &&functions,
            std::deque<Action> &&actions);

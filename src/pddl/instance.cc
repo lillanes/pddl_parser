@@ -7,7 +7,7 @@ namespace pddl_parser {
 Instance::Instance(std::string &&name,
                    Domain &domain,
                    std::deque<std::string> &&requirements,
-                   std::deque<TypedName> &&objects,
+                   std::unordered_map<std::string, TypedName> &&objects,
                    State &&init,
                    std::unique_ptr<Condition> &&goal)
     : name(std::move(name)),
