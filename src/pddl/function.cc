@@ -10,10 +10,10 @@ Function::Function(std::string &&name, std::deque<TypedName> &&variables)
 }
 
 TypedFunction::TypedFunction(std::string &&name,
-              std::deque<TypedName> &&variables,
-              size_t type_index)
+                             std::deque<TypedName> &&variables,
+                             std::string &&type_name)
     : Function(std::move(name), std::move(variables)),
-      type_index(type_index) {
+      type_name(std::move(type_name)) {
 }
 
 } // namespace pddl_parser

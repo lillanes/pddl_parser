@@ -1,7 +1,6 @@
 #ifndef PDDL_PARSER_FUNCTION_H
 #define PDDL_PARSER_FUNCTION_H
 
-#include <cstddef>
 #include <string>
 #include <deque>
 
@@ -18,12 +17,12 @@ public:
 };
 
 class TypedFunction : Function {
-    size_t type_index;
+    std::string type_name;
 
 public:
     TypedFunction(std::string &&name,
                   std::deque<TypedName> &&variables,
-                  size_t type_index);
+                  std::string &&type_name);
 };
 
 } // namespace pddl_parser

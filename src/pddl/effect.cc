@@ -4,7 +4,6 @@
 
 namespace pddl_parser {
 
-
 AddEffect::AddEffect(std::string &&predicate_name,
                      std::deque<std::string> &&parameters)
     : predicate_name(std::move(predicate_name)),

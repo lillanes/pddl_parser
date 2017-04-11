@@ -1,7 +1,6 @@
 #ifndef PDDL_PARSER_TYPED_NAME_H
 #define PDDL_PARSER_TYPED_NAME_H
 
-#include <cstddef>
 #include <string>
 
 #include "type.hh"
@@ -10,10 +9,12 @@ namespace pddl_parser {
 
 class TypedName {
     std::string name;
-    size_t type_index;
+    std::string type_name;
 
 public:
-    TypedName(std::string &&name, size_t type_index);
+    TypedName(std::string &&name, std::string &&type_name);
+    friend std::ostream & operator<<(std::ostream &stream,
+                                     const TypedName &tn);
 };
 
 } // namespace pddl_parser

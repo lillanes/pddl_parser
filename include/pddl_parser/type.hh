@@ -1,10 +1,10 @@
 #ifndef PDDL_PARSER_TYPE_H
 #define PDDL_PARSER_TYPE_H
 
-#include <cstddef>
 #include <deque>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 namespace pddl_parser {
 
@@ -18,22 +18,22 @@ public:
 };
 
 class DerivedType : Type {
-    size_t parent_index;
+    std::string parent_name;
 
 public:
-    DerivedType(std::string &&name, size_t parent_index);
+    DerivedType(std::string &&name, std::string &&parent_name);
     DerivedType(std::string &&name);
 };
 
 class Either : Type {
-    std::deque<size_t> option_indices;
+    std::deque<std::string> option_names;
 
 public:
-    Either(std::string &&name, std::deque<size_t> &&options);
+    Either(std::string &&name, std::deque<std::string> &&option_names);
 };
 
 class Types {
-    std::deque<std::unique_ptr<Type>> types;
+    std::unordered_map<std::string,std::unique_ptr<Type>> types;
 
 public:
     Types();

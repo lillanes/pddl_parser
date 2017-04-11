@@ -8,23 +8,23 @@ Type::Type(std::string &&name)
     : name(std::move(name)) {
 }
 
-DerivedType::DerivedType(std::string &&name, size_t parent_index)
+DerivedType::DerivedType(std::string &&name, std::string &&parent_name)
     : Type(std::move(name)),
-      parent_index(parent_index) {
+      parent_name(std::move(parent_name)) {
 }
 
 DerivedType::DerivedType(std::string &&name)
     : Type(std::move(name)),
-      parent_index(0) {
+      parent_name("object") {
 }
 
-Either::Either(std::string &&name, std::deque<size_t> &&option_indices)
+Either::Either(std::string &&name, std::deque<std::string> &&option_names)
     : Type(std::move(name)),
-      option_indices(std::move(option_indices)) {
+      option_names(std::move(option_names)) {
 }
 
 Types::Types() {
-    types.emplace_back(std::unique_ptr<Type>(new Type("object")));
+    types.emplace("object", std::unique_ptr<Type>(new Type("object")));
 }
 
 }
