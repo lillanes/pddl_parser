@@ -14,4 +14,20 @@ Action::Action(std::string &&name,
       effects(std::move(effects)) {
 }
 
+std::ostream& operator<<(std::ostream &stream, Action const &action) {
+    stream << "( :action " << action.name << std::endl;
+    stream << "   :parameters (" << std::endl;
+    for (auto const &p : action.parameters) {
+        stream << "    " << p << std::endl;
+    }
+    stream << "    )" << std::endl;
+    stream << "   :precondition" << std::endl << *action.condition << std::endl;
+    stream << "   :effect ( and" << std::endl;
+    for (auto const &e : action.effects) {
+        stream << "  " << *e << std::endl;
+    }
+    stream << "    ) )" << std::endl;
+    return stream;
+}
+
 } // namespace pddl_parser

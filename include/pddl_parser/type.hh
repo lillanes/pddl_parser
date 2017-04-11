@@ -30,6 +30,7 @@ public:
     Types();
 
     void add_types(std::deque<TypedName> &&typed_names);
+    Type& get_type(std::string &name);
     friend std::ostream& operator<<(std::ostream& stream, const Types &types);
 };
 

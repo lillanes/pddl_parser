@@ -2,6 +2,7 @@
 #define PDDL_PARSER_EFFECT_H
 
 #include <deque>
+#include <iostream>
 #include <string>
 #include <memory>
 
@@ -10,6 +11,10 @@
 namespace pddl_parser {
 
 class Effect {
+protected:
+    virtual void print(std::ostream &stream) const = 0;
+public:
+    friend std::ostream& operator<<(std::ostream &stream, Effect const &effect);
 };
 
 class AddEffect : public Effect {
@@ -19,6 +24,7 @@ class AddEffect : public Effect {
 public:
     AddEffect(std::string &&predicate_name,
               std::deque<std::string> &&parameters);
+    void print(std::ostream &stream) const;
 };
 
 class DeleteEffect : public Effect {
@@ -28,6 +34,7 @@ class DeleteEffect : public Effect {
 public:
     DeleteEffect(std::string &&predicate_name,
                  std::deque<std::string> &&parameters);
+    void print(std::ostream &stream) const;
 };
 
 enum AssignmentOperator {
@@ -49,6 +56,7 @@ public:
                   std::string &&function_name,
                   std::deque<std::string> &&parameters,
                   std::unique_ptr<NumericExpression> &&expression);
+    void print(std::ostream &stream) const;
 };
 
 } // namespace pddl_parser

@@ -2,6 +2,7 @@
 #define PDDL_PARSER_ACTION_H
 
 #include <deque>
+#include <iostream>
 #include <string>
 #include <memory>
 
@@ -22,6 +23,8 @@ public:
            std::deque<TypedName> &&parameters,
            std::unique_ptr<Condition> &&condition,
            std::deque<std::unique_ptr<Effect>> &&effects);
+
+    friend std::ostream& operator<<(std::ostream &stream, Action const &action);
 };
 
 } // namespace pddl_parser

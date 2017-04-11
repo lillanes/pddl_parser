@@ -26,11 +26,15 @@ Types::Types() {
 void Types::add_types(std::deque<TypedName> &&typed_names) {
     for (TypedName &tn : typed_names) {
         std::string key(tn.get_name());
-        if (key.compare(tn.get_name()) != 0) {
+        if (key.compare("object") != 0) {
             types.emplace(key, Type(std::move(tn.get_name()),
                                     std::move(tn.get_type_name())));
         }
     }
+}
+
+Type& Types::get_type(std::string &name) {
+    return types.at(name);
 }
 
 std::ostream& operator<<(std::ostream &stream, const Types &types) {

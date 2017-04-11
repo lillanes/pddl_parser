@@ -10,6 +10,11 @@ TypedName::TypedName(std::string &&name, std::string &&type_name)
       type_name(std::move(type_name)) {
 }
 
+TypedName::TypedName(std::string &&name)
+    : name(std::move(name)),
+      type_name("object") {
+}
+
 std::ostream & operator<<(std::ostream &stream,
                           const pddl_parser::TypedName &tn) {
     stream << tn.name << " - " << tn.type_name;

@@ -2,6 +2,7 @@
 #define PDDL_PARSER_CONDITION_H
 
 #include <deque>
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -10,6 +11,11 @@
 namespace pddl_parser {
 
 class Condition {
+protected:
+    virtual void print(std::ostream &stream) const = 0;
+public:
+    friend std::ostream& operator<<(std::ostream &stream,
+                                    Condition const &condition);
 };
 
 class AtomicFormula : public Condition {
@@ -19,6 +25,7 @@ class AtomicFormula : public Condition {
 public:
     AtomicFormula(std::string &&predicate_name,
                   std::deque<std::string> &&parameters);
+    void print(std::ostream &stream) const;
 };
 
 class Conjunction : public Condition {
@@ -26,6 +33,7 @@ class Conjunction : public Condition {
 
 public:
     Conjunction(std::deque<std::unique_ptr<Condition>> &&conjuncts);
+    void print(std::ostream &stream) const;
 };
 
 class Literal : public Condition {
@@ -34,6 +42,7 @@ class Literal : public Condition {
 
 public:
     Literal(bool negated, AtomicFormula &&atom);
+    void print(std::ostream &stream) const;
 };
 
 enum Comparator {
@@ -46,13 +55,14 @@ enum Comparator {
 
 class NumericComparison : public Condition {
     Comparator comparator;
-    NumericExpression lhs;
-    NumericExpression rhs;
+    std::unique_ptr<NumericExpression> lhs;
+    std::unique_ptr<NumericExpression> rhs;
 
 public:
     NumericComparison(Comparator comparator,
-                      NumericExpression &&lhs,
-                      NumericExpression &&rhs);
+                      std::unique_ptr<NumericExpression> &&lhs,
+                      std::unique_ptr<NumericExpression> &&rhs);
+    void print(std::ostream &stream) const;
 };
 
 } // namespace pddl_parser
