@@ -2,41 +2,35 @@
 #define PDDL_PARSER_TYPE_H
 
 #include <deque>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
+#include "typed_name.hh"
+
 namespace pddl_parser {
 
 class Type {
+    friend class Types;
 protected:
     std::string name;
-
-public:
-    Type(std::string &&name);
-    std::string &get_name() { return name; }
-};
-
-class DerivedType : Type {
     std::string parent_name;
 
 public:
-    DerivedType(std::string &&name, std::string &&parent_name);
-    DerivedType(std::string &&name);
-};
-
-class Either : Type {
-    std::deque<std::string> option_names;
-
-public:
-    Either(std::string &&name, std::deque<std::string> &&option_names);
+    Type(std::string &&name);
+    Type(std::string &&name, std::string &&parent_name);
+    friend std::ostream& operator<<(std::ostream& stream, const Type &type);
 };
 
 class Types {
-    std::unordered_map<std::string,std::unique_ptr<Type>> types;
+    std::unordered_map<std::string,Type> types;
 
 public:
     Types();
+
+    void add_types(std::deque<TypedName> &&typed_names);
+    friend std::ostream& operator<<(std::ostream& stream, const Types &types);
 };
 
 } // namespace pddl_parser

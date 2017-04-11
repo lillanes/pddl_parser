@@ -12,7 +12,7 @@ namespace pddl_parser {
 class Condition {
 };
 
-class AtomicFormula : Condition {
+class AtomicFormula : public Condition {
     std::string predicate_name;
     std::deque<std::string> parameters;
 
@@ -21,14 +21,14 @@ public:
                   std::deque<std::string> &&parameters);
 };
 
-class Conjunction : Condition {
+class Conjunction : public Condition {
     std::deque<std::unique_ptr<Condition>> conjuncts;
 
 public:
     Conjunction(std::deque<std::unique_ptr<Condition>> &&conjuncts);
 };
 
-class Literal : Condition {
+class Literal : public Condition {
     bool negated;
     AtomicFormula atom;
 
@@ -44,7 +44,7 @@ enum Comparator {
     GT
 };
 
-class NumericComparison : Condition {
+class NumericComparison : public Condition {
     Comparator comparator;
     NumericExpression lhs;
     NumericExpression rhs;

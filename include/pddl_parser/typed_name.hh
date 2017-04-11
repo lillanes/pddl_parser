@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "type.hh"
-
 namespace pddl_parser {
 
 class TypedName {
@@ -15,6 +13,9 @@ public:
     TypedName(std::string &&name, std::string &&type_name);
     friend std::ostream & operator<<(std::ostream &stream,
                                      const TypedName &tn);
+
+    std::string &get_name() { return name; }
+    std::string &get_type_name() { return type_name; }
 };
 
 } // namespace pddl_parser

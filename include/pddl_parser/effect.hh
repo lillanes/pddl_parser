@@ -12,7 +12,7 @@ namespace pddl_parser {
 class Effect {
 };
 
-class AddEffect : Effect {
+class AddEffect : public Effect {
     std::string predicate_name;
     std::deque<std::string> parameters;
 
@@ -21,7 +21,7 @@ public:
               std::deque<std::string> &&parameters);
 };
 
-class DeleteEffect : Effect {
+class DeleteEffect : public Effect {
     std::string predicate_name;
     std::deque<std::string> parameters;
 
@@ -38,7 +38,7 @@ enum AssignmentOperator {
     DECREASE
 };
 
-class NumericEffect : Effect {
+class NumericEffect : public Effect {
     AssignmentOperator assignment_operator;
     std::string function_name;
     std::deque<std::string> parameters;

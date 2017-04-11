@@ -16,7 +16,7 @@ public:
     Function(std::string &&name, std::deque<TypedName> &&variables);
 };
 
-class TypedFunction : Function {
+class TypedFunction : public Function {
     std::string type_name;
 
 public:

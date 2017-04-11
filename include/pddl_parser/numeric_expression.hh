@@ -10,13 +10,13 @@ namespace pddl_parser {
 class NumericExpression {
 };
 
-class Number : NumericExpression {
+class Number : public NumericExpression {
     double value;
 public:
     Number(double value);
 };
 
-class AtomicExpression {
+class AtomicExpression : public NumericExpression {
     std::string function_name;
     std::deque<std::string> parameters;
 
@@ -32,7 +32,7 @@ enum BinaryOperator {
     DIV
 };
 
-class BinaryExpression {
+class BinaryExpression : public NumericExpression {
     BinaryOperator binary_operator;
     std::unique_ptr<NumericExpression> lhs;
     std::unique_ptr<NumericExpression> rhs;
@@ -43,7 +43,7 @@ public:
                      std::unique_ptr<NumericExpression> &&rhs);
 };
 
-class InverseExpression {
+class InverseExpression : public NumericExpression {
     std::unique_ptr<NumericExpression> expression;
 
 public:
