@@ -35,6 +35,10 @@ void Conjunction::print(std::ostream &stream) const {
     stream << "  )";
 }
 
+Truth::Truth()
+    : Conjunction(std::deque<std::unique_ptr<Condition>>()) {
+}
+
 Literal::Literal(bool negated, AtomicFormula &&atom)
     : negated(negated),
       atom(std::move(atom)) {

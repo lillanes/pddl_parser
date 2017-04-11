@@ -41,17 +41,17 @@ std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     }
     stream << " )" << std::endl;
 
-    stream << "  ( :predicates" << std::endl;
+    stream << "  ( :predicates";
     for (auto const &p : domain.predicates) {
-        stream << "  " << p;
+        stream << std::endl << "    " << p;
     }
-    stream << "  )" << std::endl;
+    stream << " )" << std::endl;
 
-    stream << "  ( :functions" << std::endl;
+    stream << "  ( :functions";
     for (auto const &f : domain.functions) {
-        stream << "  " << f << std::endl;
+        stream << std::endl << "    " << f;
     }
-    stream << "  )" << std::endl;
+    stream << " )" << std::endl;
 
     for (auto const &a : domain.actions) {
         stream << a << std::endl;

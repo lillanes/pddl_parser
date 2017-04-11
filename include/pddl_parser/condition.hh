@@ -36,6 +36,11 @@ public:
     void print(std::ostream &stream) const;
 };
 
+class Truth : public Conjunction {
+public:
+    Truth();
+};
+
 class Literal : public Condition {
     bool negated;
     AtomicFormula atom;
