@@ -4,10 +4,8 @@
 
 namespace pddl_parser {
 
-Type Type::object("object");
-
 Type::Type(std::string &&name)
-    : name(name) {
+    : name(std::move(name)) {
 }
 
 DerivedType::DerivedType(std::string &&name, size_t parent_index)
@@ -23,6 +21,10 @@ DerivedType::DerivedType(std::string &&name)
 Either::Either(std::string &&name, std::deque<size_t> &&option_indices)
     : Type(std::move(name)),
       option_indices(std::move(option_indices)) {
+}
+
+Types::Types() {
+    types.emplace_back(std::unique_ptr<Type>(new Type("object")));
 }
 
 }

@@ -13,7 +13,6 @@ protected:
     std::string name;
 
 public:
-    static Type object;
     Type(std::string &&name);
     std::string &get_name() { return name; }
 };
@@ -31,6 +30,13 @@ class Either : Type {
 
 public:
     Either(std::string &&name, std::deque<size_t> &&options);
+};
+
+class Types {
+    std::deque<std::unique_ptr<Type>> types;
+
+public:
+    Types();
 };
 
 } // namespace pddl_parser

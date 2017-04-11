@@ -14,7 +14,7 @@ namespace pddl_parser {
 
 class Domain {
     std::deque<std::string> requirements;
-    std::deque<Type> types;
+    Types types;
     std::deque<TypedName> constants;
     std::deque<Predicate> predicates;
     std::deque<Function> functions;
@@ -22,7 +22,7 @@ class Domain {
 
 public:
     Domain(std::deque<std::string> &&requirements,
-           std::deque<Type> &&types,
+           Types &&types,
            std::deque<TypedName> &&constants,
            std::deque<Predicate> &&predicates,
            std::deque<Function> &&functions,

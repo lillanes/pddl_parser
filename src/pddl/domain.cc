@@ -5,7 +5,7 @@
 namespace pddl_parser {
 
 Domain::Domain(std::deque<std::string> &&requirements,
-               std::deque<Type> &&types,
+               Types &&types,
                std::deque<TypedName> &&constants,
                std::deque<Predicate> &&predicates,
                std::deque<Function> &&functions,
