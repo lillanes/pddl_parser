@@ -10,10 +10,6 @@
 namespace pddl_parser {
 
 class Condition {
-private:
-    Condition() = delete;
-public:
-    virtual void print(std::string &indent) const = 0;
 };
 
 class AtomicFormula : Condition {
@@ -21,9 +17,8 @@ class AtomicFormula : Condition {
     std::deque<std::string> parameters;
 
 public:
-    AtomicFormula(std::string &&name, std::deque<std::string> &&parameters);
-
-    void print(std::string &indent) const;
+    AtomicFormula(std::string &&predicate_name,
+                  std::deque<std::string> &&parameters);
 };
 
 class Conjunction : Condition {
@@ -31,8 +26,6 @@ class Conjunction : Condition {
 
 public:
     Conjunction(std::deque<std::unique_ptr<Condition>> &&conjuncts);
-
-    void print(std::string &indent) const;
 };
 
 class Literal : Condition {
@@ -41,8 +34,6 @@ class Literal : Condition {
 
 public:
     Literal(bool negated, AtomicFormula &&atom);
-
-    void print(std::string &indent) const;
 };
 
 enum Comparator {
@@ -61,9 +52,7 @@ class NumericComparison : Condition {
 public:
     NumericComparison(Comparator comparator,
                       NumericExpression &&lhs,
-                      NumericExpression &rhs);
-
-    void print(std::string &indent) const;
+                      NumericExpression &&rhs);
 };
 
 } // namespace pddl_parser

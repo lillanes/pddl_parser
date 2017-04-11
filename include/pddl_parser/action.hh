@@ -22,8 +22,6 @@ public:
            std::deque<TypedName> &&parameters,
            std::unique_ptr<Condition> &&condition,
            std::deque<std::unique_ptr<Effect>> &&effects);
-
-    void print(std::string &indent) const;
 };
 
 } // namespace pddl_parser

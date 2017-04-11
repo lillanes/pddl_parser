@@ -8,10 +8,6 @@
 namespace pddl_parser {
 
 class NumericExpression {
-private:
-    NumericExpression() = delete;
-public:
-    virtual void print(std::string &indent) const = 0;
 };
 
 class Number : NumericExpression {
@@ -27,8 +23,6 @@ class AtomicExpression {
 public:
     AtomicExpression(std::string &&function_name,
                      std::deque<std::string> &&parameters);
-
-    virtual void print(std::string &indent) const;
 };
 
 enum BinaryOperator {
@@ -47,18 +41,13 @@ public:
     BinaryExpression(BinaryOperator binary_operator,
                      std::unique_ptr<NumericExpression> &&lhs,
                      std::unique_ptr<NumericExpression> &&rhs);
-
-    virtual void print(std::string &indent) const;
-
 };
 
-class NegatedExpression {
+class InverseExpression {
     std::unique_ptr<NumericExpression> expression;
 
 public:
-    NegatedExpression(std::unique_ptr<NumericExpression> &&expression);
-
-    virtual void print(std::string &indent) const;
+    InverseExpression(std::unique_ptr<NumericExpression> &&expression);
 };
 
 } // namespace pddl_parser

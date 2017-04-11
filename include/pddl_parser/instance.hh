@@ -24,8 +24,6 @@ public:
              std::deque<TypedName> &&objects,
              State &&init,
              std::unique_ptr<Condition> &&goal);
-
-    void print(std::string &indent) const;
 };
 
 } // namespace pddl_parser

@@ -10,10 +10,6 @@
 namespace pddl_parser {
 
 class Effect {
-private:
-    Effect() = delete;
-public:
-    virtual void print(std::string &indent) const = 0;
 };
 
 class AddEffect : Effect {
@@ -23,8 +19,6 @@ class AddEffect : Effect {
 public:
     AddEffect(std::string &&predicate_name,
               std::deque<std::string> &&parameters);
-
-    virtual void print(std::string &indent) const;
 };
 
 class DeleteEffect : Effect {
@@ -34,8 +28,6 @@ class DeleteEffect : Effect {
 public:
     DeleteEffect(std::string &&predicate_name,
                  std::deque<std::string> &&parameters);
-
-    virtual void print(std::string &indent) const;
 };
 
 enum AssignmentOperator {
@@ -56,9 +48,7 @@ public:
     NumericEffect(AssignmentOperator assigment_operator,
                   std::string &&function_name,
                   std::deque<std::string> &&parameters,
-                  NumericExpression &&expression);
-
-    virtual void print(std::string &indent) const;
+                  std::unique_ptr<NumericExpression> &&expression);
 };
 
 } // namespace pddl_parser

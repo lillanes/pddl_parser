@@ -14,9 +14,6 @@ class Predicate {
 
 public:
     Predicate(std::string &&name, std::deque<TypedName> &&variables);
-
-    void print(std::string &indent) const;
-
 };
 
 } // namespace pddl_parser

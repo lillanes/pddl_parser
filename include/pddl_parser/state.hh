@@ -16,8 +16,6 @@ class State {
 public:
     State(std::deque<Literal> &&propositional_state,
           std::deque<std::pair<std::string,double>> numeric_state);
-
-    void print(std::string &indent) const;
 };
 
 } // namespace pddl_parser

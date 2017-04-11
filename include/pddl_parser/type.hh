@@ -1,6 +1,7 @@
 #ifndef PDDL_PARSER_TYPE_H
 #define PDDL_PARSER_TYPE_H
 
+#include <cstddef>
 #include <deque>
 #include <memory>
 #include <string>
@@ -15,27 +16,21 @@ public:
     static Type object;
     Type(std::string &&name);
     std::string &get_name() { return name; }
-
-    void print(std::string &indent) const;
 };
 
 class DerivedType : Type {
-    Type &parent;
+    size_t parent_index;
 
 public:
-    DerivedType(std::string &&name, Type &parent);
+    DerivedType(std::string &&name, size_t parent_index);
     DerivedType(std::string &&name);
-
-    void print(std::string &indent) const;
 };
 
 class Either : Type {
-    std::deque<std::shared_ptr<Type>> options;
+    std::deque<size_t> option_indices;
 
 public:
-    Either(std::string &&name, std::deque<std::shared_ptr<Type>> &&options);
-
-    void print(std::string &indent) const;
+    Either(std::string &&name, std::deque<size_t> &&options);
 };
 
 } // namespace pddl_parser
