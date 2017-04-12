@@ -51,13 +51,13 @@ std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     for (auto const &f : domain.functions) {
         stream << std::endl << "    " << f;
     }
-    stream << " )" << std::endl;
+    stream << " )";
 
     for (auto const &a : domain.actions) {
-        stream << a << std::endl;
+        stream << std::endl << a;
     }
 
-    stream << " )" << std::endl;
+    stream << std::endl << " )" << std::endl;
     return stream;
 }
 

@@ -53,9 +53,9 @@ void BinaryExpression::print(std::ostream &stream) const {
     else if (binary_operator == BinaryOperator::DIV) {
         stream << "/";
     }
-    stream << std::endl << "  " << *lhs;
-    stream << std::endl << "  " << *rhs;
-    stream << std::endl << "  )";
+    stream << " " << *lhs;
+    stream << " " << *rhs;
+    stream << " )";
 }
 
 InverseExpression::InverseExpression(

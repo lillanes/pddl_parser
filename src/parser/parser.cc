@@ -14,25 +14,31 @@
 
 using namespace pddl_parser;
 
-int main(int argc, char **argv) {
-    (void)argc; (void)argv;
-
+int main(int, char **) {
     std::deque<std::string> requirements;
+    std::unordered_map<std::string, TypedName> types;
+    std::unordered_map<std::string, TypedName> constants;
+    std::deque<Predicate> predicates;
+    std::deque<Function> functions;
+    std::deque<Action> actions;
+    std::unique_ptr<Condition> condition;
+    std::deque<std::unique_ptr<Effect>> effects;
+
+    std::deque<std::unique_ptr<Condition>> conditions;
+    std::deque<TypedName> variables;
+    std::unique_ptr<NumericExpression> lhs;
+    std::unique_ptr<NumericExpression> rhs;
+
     requirements.emplace_back(":typing");
     requirements.emplace_back(":fluents");
 
-    std::unordered_map<std::string, TypedName> types;
     types.emplace("locatable", TypedName("locatable"));
     types.emplace("location", TypedName("location"));
     types.emplace("truck", TypedName("truck", "locatable"));
     types.emplace("box", TypedName("box", "locatable"));
 
-    std::unordered_map<std::string, TypedName> constants;
     constants.emplace("depot", TypedName("depot", "location"));
 
-    std::deque<TypedName> variables;
-
-    std::deque<Predicate> predicates;
     variables.emplace_back("?x", "locatable");
     variables.emplace_back("?l", "location");
     predicates.emplace_back("at", std::move(variables));
@@ -40,19 +46,95 @@ int main(int argc, char **argv) {
     variables.emplace_back("?t", "truck");
     predicates.emplace_back("in", std::move(variables));
 
-    std::deque<Function> functions;
     variables.emplace_back("?t", "truck");
     functions.emplace_back("max-weight", std::move(variables));
     variables.emplace_back("?x", "locatable");
     functions.emplace_back("weight", std::move(variables));
 
-    std::deque<Action> actions;
+    condition = std::unique_ptr<Condition>(
+        new AtomicFormula("at", {"?t", "?from"}));
 
-    std::unique_ptr<Condition> truth(new Truth());
-    std::deque<std::unique_ptr<Effect>> effects;
-    actions.emplace_back("noop",
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new DeleteEffect("at", {"?t", "?from"})));
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new AddEffect("at", {"?t", "?to"})));
+
+    variables.emplace_back("?t", "truck");
+    variables.emplace_back("?from", "location");
+    variables.emplace_back("?to", "location");
+
+    actions.emplace_back("move",
                          std::move(variables),
-                         std::move(truth),
+                         std::move(condition),
+                         std::move(effects));
+
+    conditions.emplace_back(std::unique_ptr<Condition>(
+                                new AtomicFormula("at", {"?t", "?l"})));
+    conditions.emplace_back(std::unique_ptr<Condition>(
+                                new AtomicFormula("at", {"?b", "?l"})));
+    lhs = std::unique_ptr<NumericExpression>(
+        new AtomicExpression("weight", {"?t"}));
+    rhs = std::unique_ptr<NumericExpression>(
+        new AtomicExpression("weight", {"?b"}));
+    lhs = std::unique_ptr<NumericExpression>(
+        new BinaryExpression(BinaryOperator::PLUS,
+                             std::move(lhs), std::move(rhs)));
+    rhs = std::unique_ptr<NumericExpression>(
+        new AtomicExpression("max-weight", {"?t"}));
+    conditions.emplace_back(std::unique_ptr<Condition>(
+                                new NumericComparison(Comparator::LTE,
+                                                      std::move(lhs),
+                                                      std::move(rhs))));
+
+    condition = std::unique_ptr<Condition>(
+        new Conjunction(std::move(conditions)));
+
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new DeleteEffect("at", {"?b", "?l"})));
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new AddEffect("in", {"?b", "?t"})));
+    rhs = std::unique_ptr<NumericExpression>(
+        new AtomicExpression("weight", {"?b"}));
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new NumericEffect(AssignmentOperator::INCREASE,
+                                               "weight", {"?t"},
+                                               std::move(rhs))));
+
+    variables.emplace_back("?t", "truck");
+    variables.emplace_back("?b", "box");
+    variables.emplace_back("?l", "location");
+
+    actions.emplace_back("load",
+                         std::move(variables),
+                         std::move(condition),
+                         std::move(effects));
+
+    conditions.emplace_back(std::unique_ptr<Condition>(
+                                new AtomicFormula("at", {"?t", "?l"})));
+    conditions.emplace_back(std::unique_ptr<Condition>(
+                                new AtomicFormula("in", {"?b", "?t"})));
+
+    condition = std::unique_ptr<Condition>(
+        new Conjunction(std::move(conditions)));
+
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new DeleteEffect("in", {"?b", "?t"})));
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new AddEffect("at", {"?b", "?l"})));
+    rhs = std::unique_ptr<NumericExpression>(
+        new AtomicExpression("weight", {"?b"}));
+    effects.emplace_back(std::unique_ptr<Effect>(
+                             new NumericEffect(AssignmentOperator::DECREASE,
+                                               "weight", {"?t"},
+                                               std::move(rhs))));
+
+    variables.emplace_back("?t", "truck");
+    variables.emplace_back("?b", "box");
+    variables.emplace_back("?l", "location");
+
+    actions.emplace_back("unload",
+                         std::move(variables),
+                         std::move(condition),
                          std::move(effects));
 
     Domain domain("trucky",

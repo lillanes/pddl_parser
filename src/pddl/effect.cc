@@ -64,11 +64,11 @@ void NumericEffect::print(std::ostream &stream) const {
     else if (assignment_operator == AssignmentOperator::SCALE_DOWN) {
         stream << "scale-down";
     }
-    stream << std::endl << "  ( " << function_name << " ";
+    stream << " ( " << function_name << " ";
     for (auto const &p : parameters) {
         stream << p << " ";
     }
-    stream << ")" << std::endl << "  " << *expression << "  )";
+    stream << ") " << *expression << " )";
 }
 
 } // namespace pddl_parser

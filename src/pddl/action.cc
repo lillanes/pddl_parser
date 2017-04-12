@@ -15,18 +15,18 @@ Action::Action(std::string &&name,
 }
 
 std::ostream& operator<<(std::ostream &stream, Action const &action) {
-    stream << "( :action " << action.name << std::endl;
-    stream << "   :parameters (" << std::endl;
+    stream << "  ( :action " << action.name << std::endl;
+    stream << "    :parameters ( ";
     for (auto const &p : action.parameters) {
-        stream << "    " << p << std::endl;
+        stream << p << " ";
     }
-    stream << "    )" << std::endl;
-    stream << "   :precondition" << std::endl << *action.condition << std::endl;
-    stream << "   :effect ( and" << std::endl;
+    stream << ")" << std::endl;
+    stream << "    :precondition " << *action.condition << std::endl;
+    stream << "    :effect ( and ";
     for (auto const &e : action.effects) {
-        stream << "  " << *e << std::endl;
+        stream << *e << " ";
     }
-    stream << "    ) )" << std::endl;
+    stream << ") )";
     return stream;
 }
 

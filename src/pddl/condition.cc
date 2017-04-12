@@ -28,11 +28,11 @@ Conjunction::Conjunction(std::deque<std::unique_ptr<Condition>> &&conjuncts)
 }
 
 void Conjunction::print(std::ostream &stream) const {
-    stream << "( and" << std::endl;
+    stream << "( and ";
     for (auto const &conjunct : conjuncts) {
-        stream << "  " << *conjunct << std::endl;
+        stream << *conjunct << " ";
     }
-    stream << "  )";
+    stream << ")";
 }
 
 Truth::Truth()
@@ -46,7 +46,7 @@ Literal::Literal(bool negated, AtomicFormula &&atom)
 
 void Literal::print(std::ostream &stream) const {
     if (negated) {
-        stream << "( not " << atom << " )"; 
+        stream << "( not " << atom << " )";
     }
     else {
         stream << atom;
@@ -79,9 +79,9 @@ void NumericComparison::print(std::ostream &stream) const {
         stream << ">";
     }
 
-    stream << std::endl << "  " << *lhs;
-    stream << std::endl << "  " << *rhs;
-    stream << std::endl << "  )";
+    stream << " " << *lhs;
+    stream << " " << *rhs;
+    stream << " )";
 }
 
 } // namespace pddl_parser
