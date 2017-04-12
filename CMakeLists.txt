@@ -13,3 +13,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 include_directories("${CMAKE_SOURCE_DIR}/include/pddl_parser")
 
 add_subdirectory(src)
+
+enable_testing()
+add_subdirectory(test)

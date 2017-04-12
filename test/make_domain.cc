@@ -1,5 +1,6 @@
 #include <cstdlib>
-#include <iostream>
+#include <fstream>
+#include <sstream>
 
 #include "action.hh"
 #include "condition.hh"
@@ -14,7 +15,7 @@
 
 using namespace pddl_parser;
 
-int main(int, char **) {
+int main(int, char **argv) {
     std::deque<std::string> requirements;
     std::unordered_map<std::string, TypedName> types;
     std::unordered_map<std::string, TypedName> constants;
@@ -145,7 +146,18 @@ int main(int, char **) {
                   std::move(functions),
                   std::move(actions));
 
-    std::cout << domain;
 
-    return EXIT_SUCCESS;
+    // Golden file test:
+
+    std::ostringstream output;
+    output << domain;
+
+    std::ifstream golden_file(argv[1]);
+    std::stringstream golden;
+    golden << golden_file.rdbuf();
+
+    if (output.str() == golden.str()) {
+        return EXIT_SUCCESS;
+    }
+    return EXIT_FAILURE;
 }
