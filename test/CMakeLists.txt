@@ -1,3 +1,5 @@
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test)
+
 add_executable(make_domain_test EXCLUDE_FROM_ALL make_domain.cc)
 target_link_libraries(make_domain_test pddl)
 
