@@ -22,16 +22,4 @@ void Function::print(std::ostream &stream) const {
     stream << ")";
 }
 
-TypedFunction::TypedFunction(std::string &&name,
-                             std::deque<TypedName> &&variables,
-                             std::string &&type_name)
-    : Function(std::move(name), std::move(variables)),
-      type_name(std::move(type_name)) {
-}
-
-void TypedFunction::print(std::ostream &stream) const {
-    Function::print(stream);
-    stream << " - " << type_name;
-}
-
 } // namespace pddl_parser

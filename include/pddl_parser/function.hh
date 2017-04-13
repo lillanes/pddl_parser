@@ -23,18 +23,6 @@ public:
                                     Function const &function);
 };
 
-class TypedFunction : public Function {
-    std::string type_name;
-
-protected:
-    void print(std::ostream &stream) const;
-
-public:
-    TypedFunction(std::string &&name,
-                  std::deque<TypedName> &&variables,
-                  std::string &&type_name);
-};
-
 } // namespace pddl_parser
 
 #endif // PDDL_PARSER_FUNCTION_H
