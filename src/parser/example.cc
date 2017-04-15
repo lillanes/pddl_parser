@@ -5,7 +5,8 @@
 
 #include "parser.bison.hh"
 
-#include "driver.hh"
+#include "domain.hh"
+#include "parse.hh"
 #include "scanner.hh"
 
 struct Timer {
@@ -49,19 +50,19 @@ int main(const int argc, const char **argv) {
     else {
         Timer timer;
 
-        timer.start();
-        pddl_parser::Driver driver;
-        std::deque<std::string> problem_fns(&argv[2], argv + argc);
-        int res = driver.parse(argv[1], problem_fns);
-        timer.finish();
+        try {
+            timer.start();
+            pddl_parser::Domain domain = pddl_parser::parse(argv[1]);
+            timer.finish();
+            std::cout << domain;
+            std::cout << "Total time: " << timer.get_wall() << " seconds ("
+                      << timer.get_cpu() << " CPU)." << std::endl;
+        }
+        catch (int error) {
+            return error;
+        }
 
-        std::cout << driver.get_domain();
-
-
-        std::cout << "Total time: " << timer.get_wall() << " seconds ("
-                  << timer.get_cpu() << " CPU)." << std::endl;
-
-        return res;
+        return EXIT_SUCCESS;
     }
     return EXIT_SUCCESS;
 }

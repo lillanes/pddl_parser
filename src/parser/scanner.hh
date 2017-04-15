@@ -1,5 +1,5 @@
-#ifndef SCANNER_HH
-#define SCANNER_HH
+#ifndef PDDL_PARSER_SCANNER_HH
+#define PDDL_PARSER_SCANNER_HH
 
 
 #if ! defined(yyFlexLexerOnce)
@@ -15,20 +15,26 @@
 
 namespace pddl_parser {
 
-class Driver;
-
 class Scanner : public yyFlexLexer {
+    friend class Parser;
 public:
-    Scanner(Driver &driver)
-        : driver(driver) {
-    }
+    Scanner() = default;
     virtual ~Scanner() {}
     virtual pddl_parser::Parser::symbol_type get_next_token();
 
 private:
-    Driver &driver;
+    pddl_parser::location location;
+
+    void incrementLocation(size_t loc) {
+        location.step();
+        location += loc;
+    }
+
+    void incrementLocationLine(size_t loc) {
+        location.lines(loc);
+    }
 };
 
-} // PDDL
+} // namespace pddl_parser
 
-#endif // SCANNER_HH
+#endif // PDDL_PARSER_SCANNER_HH

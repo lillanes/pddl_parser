@@ -36,7 +36,6 @@
     // Forward declarations
     namespace pddl_parser {
         class Scanner;
-        class Driver;
     }
 }
 
@@ -45,7 +44,6 @@
     #include <iostream>
     #include "scanner.hh"
     #include "parser.bison.hh"
-    #include "driver.hh"
 
     // Our implementation of yylex:
     static pddl_parser::Parser::symbol_type yylex(pddl_parser::Scanner &scanner) {
@@ -55,14 +53,15 @@
 
 // Parameters for /both/ the lexer and parser:
 %param { pddl_parser::Scanner &scanner }
+
 // Parameters only for the parser:
-%parse-param { pddl_parser::Driver &driver }
+%parse-param { pddl_parser::Domain &domain }
 
 %locations
 %initial-action
 {
     // Set the initial location filename. This won't change.
-    @$.begin.filename = @$.end.filename = driver.location.begin.filename;
+    @$.begin.filename = @$.end.filename = scanner.location.begin.filename;
 };
 
 // For debugging:
@@ -192,13 +191,13 @@ domain:
     "(" "define" "(" "domain" NAME ")"
     domain_parts ")"
 {
-    driver.set_domain(Domain(std::move($5),
-                             std::move(std::get<0>($7)),
-                             std::move(std::get<1>($7)),
-                             std::move(std::get<2>($7)),
-                             std::move(std::get<3>($7)),
-                             std::move(std::get<4>($7)),
-                             std::move(std::get<5>($7))));
+    domain = Domain(std::move($5),
+                    std::move(std::get<0>($7)),
+                    std::move(std::get<1>($7)),
+                    std::move(std::get<2>($7)),
+                    std::move(std::get<3>($7)),
+                    std::move(std::get<4>($7)),
+                    std::move(std::get<5>($7)));
 }
 ;
 

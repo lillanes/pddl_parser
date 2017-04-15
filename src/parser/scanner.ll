@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cstdlib>
 #include "scanner.hh"
-#include "driver.hh"
 #include "parser.bison.hh"
 #include "location.hh"
 
@@ -12,12 +11,12 @@
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 #endif
 
-#define yyterminate() return pddl_parser::Parser::make_END(driver.location)
+#define yyterminate() return pddl_parser::Parser::make_END(location)
 
 /* This is executed with every call to yylex. We just use it to keep
 * the location updated.
 */
-#define YY_USER_ACTION driver.incrementLocation(yyleng);
+#define YY_USER_ACTION incrementLocation(yyleng);
 %}
 
 %option nodefault
@@ -28,99 +27,99 @@
 
 %%
 
-"("  { return pddl_parser::Parser::make_OPEN_PARENS(driver.location); }
+"("  { return pddl_parser::Parser::make_OPEN_PARENS(location); }
 
-")"  { return pddl_parser::Parser::make_CLOSE_PARENS(driver.location); }
+")"  { return pddl_parser::Parser::make_CLOSE_PARENS(location); }
 
-"define" { return pddl_parser::Parser::make_DEFINEKW(driver.location); }
+"define" { return pddl_parser::Parser::make_DEFINEKW(location); }
 
-"domain" { return pddl_parser::Parser::make_DOMAINKW(driver.location); }
+"domain" { return pddl_parser::Parser::make_DOMAINKW(location); }
 
-":domain" { return pddl_parser::Parser::make_DOMAINREFKW(driver.location); }
+":domain" { return pddl_parser::Parser::make_DOMAINREFKW(location); }
 
-"problem" { return pddl_parser::Parser::make_PROBLEMKW(driver.location); }
+"problem" { return pddl_parser::Parser::make_PROBLEMKW(location); }
 
-":init" { return pddl_parser::Parser::make_INITKW(driver.location); }
+":init" { return pddl_parser::Parser::make_INITKW(location); }
 
-":goal" { return pddl_parser::Parser::make_GOALKW(driver.location); }
+":goal" { return pddl_parser::Parser::make_GOALKW(location); }
 
-":requirements" { return pddl_parser::Parser::make_REQUIREMENTSKW(driver.location); }
+":requirements" { return pddl_parser::Parser::make_REQUIREMENTSKW(location); }
 
-":types" { return pddl_parser::Parser::make_TYPESKW(driver.location); }
+":types" { return pddl_parser::Parser::make_TYPESKW(location); }
 
-"number" { return pddl_parser::Parser::make_NUMBERKW(driver.location); }
+"number" { return pddl_parser::Parser::make_NUMBERKW(location); }
 
-":constants" { return pddl_parser::Parser::make_CONSTANTSKW(driver.location); }
+":constants" { return pddl_parser::Parser::make_CONSTANTSKW(location); }
 
-":predicates" { return pddl_parser::Parser::make_PREDICATESKW(driver.location); }
+":predicates" { return pddl_parser::Parser::make_PREDICATESKW(location); }
 
-":functions" { return pddl_parser::Parser::make_FUNCTIONSKW(driver.location); }
+":functions" { return pddl_parser::Parser::make_FUNCTIONSKW(location); }
 
-":objects" { return pddl_parser::Parser::make_OBJECTSKW(driver.location); }
+":objects" { return pddl_parser::Parser::make_OBJECTSKW(location); }
 
-":action" { return pddl_parser::Parser::make_ACTIONKW(driver.location); }
+":action" { return pddl_parser::Parser::make_ACTIONKW(location); }
 
-":parameters" { return pddl_parser::Parser::make_PARAMETERSKW(driver.location); }
+":parameters" { return pddl_parser::Parser::make_PARAMETERSKW(location); }
 
-":precondition" { return pddl_parser::Parser::make_PRECONDITIONKW(driver.location); }
+":precondition" { return pddl_parser::Parser::make_PRECONDITIONKW(location); }
 
-":effect" { return pddl_parser::Parser::make_EFFECTKW(driver.location); }
+":effect" { return pddl_parser::Parser::make_EFFECTKW(location); }
 
-"and" { return pddl_parser::Parser::make_AND(driver.location); }
+"and" { return pddl_parser::Parser::make_AND(location); }
 
-"not" { return pddl_parser::Parser::make_NOT(driver.location); }
+"not" { return pddl_parser::Parser::make_NOT(location); }
 
-"<"  { return pddl_parser::Parser::make_L(driver.location); }
+"<"  { return pddl_parser::Parser::make_L(location); }
 
-"<="  { return pddl_parser::Parser::make_LEQ(driver.location); }
+"<="  { return pddl_parser::Parser::make_LEQ(location); }
 
-"="  { return pddl_parser::Parser::make_EQ(driver.location); }
+"="  { return pddl_parser::Parser::make_EQ(location); }
 
-">="  { return pddl_parser::Parser::make_GEQ(driver.location); }
+">="  { return pddl_parser::Parser::make_GEQ(location); }
 
-">"  { return pddl_parser::Parser::make_G(driver.location); }
+">"  { return pddl_parser::Parser::make_G(location); }
 
-"-"  { return pddl_parser::Parser::make_MINUS(driver.location); }
+"-"  { return pddl_parser::Parser::make_MINUS(location); }
 
-"+"  { return pddl_parser::Parser::make_PLUS(driver.location); }
+"+"  { return pddl_parser::Parser::make_PLUS(location); }
 
-"*"  { return pddl_parser::Parser::make_TIMES(driver.location); }
+"*"  { return pddl_parser::Parser::make_TIMES(location); }
 
-"/"  { return pddl_parser::Parser::make_DIV(driver.location); }
+"/"  { return pddl_parser::Parser::make_DIV(location); }
 
-"assign" { return pddl_parser::Parser::make_ASSIGN(driver.location); }
+"assign" { return pddl_parser::Parser::make_ASSIGN(location); }
 
-"increase" { return pddl_parser::Parser::make_INCREASE(driver.location); }
+"increase" { return pddl_parser::Parser::make_INCREASE(location); }
 
-"decrease" { return pddl_parser::Parser::make_DECREASE(driver.location); }
+"decrease" { return pddl_parser::Parser::make_DECREASE(location); }
 
-"scale-up" { return pddl_parser::Parser::make_SCALEUP(driver.location); }
+"scale-up" { return pddl_parser::Parser::make_SCALEUP(location); }
 
-"scale-down" { return pddl_parser::Parser::make_SCALEDOWN(driver.location); }
+"scale-down" { return pddl_parser::Parser::make_SCALEDOWN(location); }
 
-"forall" { return pddl_parser::Parser::make_FORALL(driver.location); }
+"forall" { return pddl_parser::Parser::make_FORALL(location); }
 
-"exists" { return pddl_parser::Parser::make_EXISTS(driver.location); }
+"exists" { return pddl_parser::Parser::make_EXISTS(location); }
 
-"when" { return pddl_parser::Parser::make_WHEN(driver.location); }
+"when" { return pddl_parser::Parser::make_WHEN(location); }
 
-"imply" { return pddl_parser::Parser::make_IMPLY(driver.location); }
+"imply" { return pddl_parser::Parser::make_IMPLY(location); }
 
 ":"?[a-zA-Z][a-zA-Z0-9\-_]* {
-    return pddl_parser::Parser::make_NAME(yytext, driver.location);
+    return pddl_parser::Parser::make_NAME(yytext, location);
 }
 
 "?"[a-zA-Z][a-zA-Z0-9\-_\[\]]* {
-    return pddl_parser::Parser::make_VARIABLE(yytext, driver.location);
+    return pddl_parser::Parser::make_VARIABLE(yytext, location);
 }
 
 "-"?[0-9]*[.]?[0-9]* {
-    return pddl_parser::Parser::make_NUMBER(atof(yytext), driver.location);
+    return pddl_parser::Parser::make_NUMBER(atof(yytext), location);
 }
 
 ";".*  { /* Comment. Will match until EOL */ }
 
-\n+    { driver.incrementLocationLine(yyleng); }
+\n+    { incrementLocationLine(yyleng); }
 
 . {}
 

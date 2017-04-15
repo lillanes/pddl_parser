@@ -2,21 +2,19 @@
 #include <fstream>
 #include <sstream>
 
-#include "driver.hh"
 #include "domain.hh"
+#include "parse.hh"
 
 using namespace pddl_parser;
 
 int main(int, char **argv) {
 
-    Driver driver;
-
-    driver.parse(argv[1], {});
+    Domain domain = parse(argv[1]);
 
     // Golden file test:
 
     std::ostringstream output;
-    output << driver.get_domain();
+    output << domain;
 
     std::ifstream golden_file(argv[1]);
     std::stringstream golden;
