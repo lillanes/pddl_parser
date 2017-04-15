@@ -36,3 +36,13 @@ add_executable(
 )
 
 target_link_libraries(example pddl)
+
+add_library(
+  parser
+  STATIC
+  ${sources}
+  ${BISON_GENERATED_SOURCES}
+  ${FLEX_PDDLScanner_OUTPUTS}
+)
+
+target_link_libraries(parser pddl)

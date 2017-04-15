@@ -38,4 +38,8 @@ void Driver::incrementLocationLine(unsigned int loc) {
     location.lines(loc);
 }
 
+void Driver::set_domain(Domain &&domain) {
+    this->domain = std::move(domain);
+}
+
 } // namespace pddl_parser

@@ -23,6 +23,7 @@ class Domain {
     std::deque<Action> actions;
 
 public:
+    Domain() = default;
     Domain(std::string &&name,
            std::deque<std::string> &&requirements,
            std::unordered_map<std::string, TypedName> &&types,

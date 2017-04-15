@@ -54,7 +54,9 @@ int main(const int argc, const char **argv) {
         std::deque<std::string> problem_fns(&argv[2], argv + argc);
         int res = driver.parse(argv[1], problem_fns);
         timer.finish();
-        // driver.print();
+
+        std::cout << driver.get_domain();
+
 
         std::cout << "Total time: " << timer.get_wall() << " seconds ("
                   << timer.get_cpu() << " CPU)." << std::endl;
