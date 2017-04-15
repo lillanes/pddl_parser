@@ -1,6 +1,9 @@
 #include <cstdlib>
+#include <deque>
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <unordered_map>
 
 #include "action.hh"
 #include "condition.hh"
@@ -22,13 +25,13 @@ int main(int, char **argv) {
     std::deque<Predicate> predicates;
     std::deque<Function> functions;
     std::deque<Action> actions;
-    std::unique_ptr<Condition> condition;
-    std::deque<std::unique_ptr<Effect>> effects;
+    Condition condition;
+    std::deque<Effect> effects;
 
-    std::deque<std::unique_ptr<Condition>> conditions;
+    std::deque<Condition> conditions;
     std::deque<TypedName> variables;
-    std::unique_ptr<NumericExpression> lhs;
-    std::unique_ptr<NumericExpression> rhs;
+    NumericExpression lhs;
+    NumericExpression rhs;
 
     requirements.emplace_back(":typing");
     requirements.emplace_back(":fluents");
@@ -52,13 +55,10 @@ int main(int, char **argv) {
     variables.emplace_back("?x", "locatable");
     functions.emplace_back("weight", std::move(variables));
 
-    condition = std::unique_ptr<Condition>(
-        new AtomicFormula("at", {"?t", "?from"}));
+    condition = Condition(new Literal("at", {"?t", "?from"}));
 
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new DeleteEffect("at", {"?t", "?from"})));
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new AddEffect("at", {"?t", "?to"})));
+    effects.emplace_back(Effect(new DeleteEffect("at", {"?t", "?from"})));
+    effects.emplace_back(Effect(new AddEffect("at", {"?t", "?to"})));
 
     variables.emplace_back("?t", "truck");
     variables.emplace_back("?from", "location");
@@ -69,37 +69,27 @@ int main(int, char **argv) {
                          std::move(condition),
                          std::move(effects));
 
-    conditions.emplace_back(std::unique_ptr<Condition>(
-                                new AtomicFormula("at", {"?t", "?l"})));
-    conditions.emplace_back(std::unique_ptr<Condition>(
-                                new AtomicFormula("at", {"?b", "?l"})));
-    lhs = std::unique_ptr<NumericExpression>(
-        new AtomicExpression("weight", {"?t"}));
-    rhs = std::unique_ptr<NumericExpression>(
-        new AtomicExpression("weight", {"?b"}));
-    lhs = std::unique_ptr<NumericExpression>(
+    conditions.emplace_back(Condition(new Literal("at", {"?t", "?l"})));
+    conditions.emplace_back(Condition(new Literal("at", {"?b", "?l"})));
+    lhs = NumericExpression(new AtomicExpression("weight", {"?t"}));
+    rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
+    lhs = NumericExpression(
         new BinaryExpression(BinaryOperator::PLUS,
-                             std::move(lhs), std::move(rhs)));
-    rhs = std::unique_ptr<NumericExpression>(
-        new AtomicExpression("max-weight", {"?t"}));
-    conditions.emplace_back(std::unique_ptr<Condition>(
-                                new NumericComparison(Comparator::LTE,
-                                                      std::move(lhs),
-                                                      std::move(rhs))));
+                             std::move(lhs),
+                             std::move(rhs)));
+    rhs = NumericExpression(new AtomicExpression("max-weight", {"?t"}));
+    conditions.emplace_back(Condition(new NumericComparison(Comparator::LTE,
+                                                            std::move(lhs),
+                                                            std::move(rhs))));
 
-    condition = std::unique_ptr<Condition>(
-        new Conjunction(std::move(conditions)));
+    condition = Condition(new Conjunction(std::move(conditions)));
 
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new DeleteEffect("at", {"?b", "?l"})));
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new AddEffect("in", {"?b", "?t"})));
-    rhs = std::unique_ptr<NumericExpression>(
-        new AtomicExpression("weight", {"?b"}));
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new NumericEffect(AssignmentOperator::INCREASE,
-                                               "weight", {"?t"},
-                                               std::move(rhs))));
+    effects.emplace_back(Effect(new DeleteEffect("at", {"?b", "?l"})));
+    effects.emplace_back(Effect(new AddEffect("in", {"?b", "?t"})));
+    rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
+    effects.emplace_back(Effect(new NumericEffect(AssignmentOperator::INCREASE,
+                                                  "weight", {"?t"},
+                                                  std::move(rhs))));
 
     variables.emplace_back("?t", "truck");
     variables.emplace_back("?b", "box");
@@ -110,24 +100,17 @@ int main(int, char **argv) {
                          std::move(condition),
                          std::move(effects));
 
-    conditions.emplace_back(std::unique_ptr<Condition>(
-                                new AtomicFormula("at", {"?t", "?l"})));
-    conditions.emplace_back(std::unique_ptr<Condition>(
-                                new AtomicFormula("in", {"?b", "?t"})));
+    conditions.emplace_back(Condition(new Literal("at", {"?t", "?l"})));
+    conditions.emplace_back(Condition(new Literal("in", {"?b", "?t"})));
 
-    condition = std::unique_ptr<Condition>(
-        new Conjunction(std::move(conditions)));
+    condition = Condition(new Conjunction(std::move(conditions)));
 
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new DeleteEffect("in", {"?b", "?t"})));
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new AddEffect("at", {"?b", "?l"})));
-    rhs = std::unique_ptr<NumericExpression>(
-        new AtomicExpression("weight", {"?b"}));
-    effects.emplace_back(std::unique_ptr<Effect>(
-                             new NumericEffect(AssignmentOperator::DECREASE,
-                                               "weight", {"?t"},
-                                               std::move(rhs))));
+    effects.emplace_back(Effect(new DeleteEffect("in", {"?b", "?t"})));
+    effects.emplace_back(Effect(new AddEffect("at", {"?b", "?l"})));
+    rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
+    effects.emplace_back(Effect(new NumericEffect(AssignmentOperator::DECREASE,
+                                                  "weight", {"?t"},
+                                                  std::move(rhs))));
 
     variables.emplace_back("?t", "truck");
     variables.emplace_back("?b", "box");
