@@ -15,14 +15,15 @@ namespace pddl_parser {
 class Action {
     std::string name;
     std::deque<TypedName> parameters;
-    std::unique_ptr<Condition> condition;
-    std::deque<std::unique_ptr<Effect>> effects;
+    Condition condition;
+    std::deque<Effect> effects;
 
 public:
+    Action() = default;
     Action(std::string &&name,
            std::deque<TypedName> &&parameters,
-           std::unique_ptr<Condition> &&condition,
-           std::deque<std::unique_ptr<Effect>> &&effects);
+           Condition &&condition,
+           std::deque<Effect> &&effects);
 
     friend std::ostream& operator<<(std::ostream &stream, Action const &action);
 };

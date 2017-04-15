@@ -16,7 +16,7 @@ class Instance {
     std::deque<std::string> requirements;
     std::unordered_map<std::string, TypedName> objects;
     State init;
-    std::unique_ptr<Condition> goal;
+    Condition goal;
 
 public:
     Instance(std::string &&name,
@@ -24,7 +24,7 @@ public:
              std::deque<std::string> &&requirements,
              std::unordered_map<std::string, TypedName> &&objects,
              State &&init,
-             std::unique_ptr<Condition> &&goal);
+             Condition &&goal);
 };
 
 } // namespace pddl_parser

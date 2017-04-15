@@ -10,16 +10,22 @@
 
 namespace pddl_parser {
 
-class Effect {
+class EffectBase {
+    friend class CopyableUniquePtr<EffectBase>;
 protected:
+    virtual EffectBase * clone() const = 0;
     virtual void print(std::ostream &stream) const = 0;
 public:
-    friend std::ostream& operator<<(std::ostream &stream, Effect const &effect);
+    friend std::ostream& operator<<(std::ostream &stream, EffectBase const &effect);
 };
 
-class AddEffect : public Effect {
+typedef CopyableUniquePtr<EffectBase> Effect;
+
+class AddEffect : public EffectBase {
     std::string predicate_name;
     std::deque<std::string> parameters;
+
+    EffectBase * clone() const;
 
 public:
     AddEffect(std::string &&predicate_name,
@@ -27,9 +33,11 @@ public:
     void print(std::ostream &stream) const;
 };
 
-class DeleteEffect : public Effect {
+class DeleteEffect : public EffectBase {
     std::string predicate_name;
     std::deque<std::string> parameters;
+
+    EffectBase * clone() const;
 
 public:
     DeleteEffect(std::string &&predicate_name,
@@ -45,17 +53,19 @@ enum AssignmentOperator {
     DECREASE
 };
 
-class NumericEffect : public Effect {
+class NumericEffect : public EffectBase {
     AssignmentOperator assignment_operator;
     std::string function_name;
     std::deque<std::string> parameters;
-    std::unique_ptr<NumericExpression> expression;
+    NumericExpression expression;
+
+    EffectBase * clone() const;
 
 public:
-    NumericEffect(AssignmentOperator assigment_operator,
+    NumericEffect(AssignmentOperator assignment_operator,
                   std::string &&function_name,
                   std::deque<std::string> &&parameters,
-                  std::unique_ptr<NumericExpression> &&expression);
+                  NumericExpression &&expression);
     void print(std::ostream &stream) const;
 };
 

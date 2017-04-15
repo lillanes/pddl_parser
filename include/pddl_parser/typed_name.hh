@@ -15,8 +15,8 @@ public:
     friend std::ostream & operator<<(std::ostream &stream,
                                      const TypedName &tn);
 
-    std::string &get_name() { return name; }
-    std::string &get_type_name() { return type_name; }
+    std::string const &get_name() const { return name; }
+    std::string const &get_type_name() const { return type_name; }
 };
 
 } // namespace pddl_parser

@@ -14,6 +14,7 @@ class Predicate {
     std::deque<TypedName> variables;
 
 public:
+    Predicate() = default;
     Predicate(std::string &&name, std::deque<TypedName> &&variables);
 
     friend std::ostream& operator<<(std::ostream &stream,

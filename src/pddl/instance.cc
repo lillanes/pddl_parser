@@ -9,7 +9,7 @@ Instance::Instance(std::string &&name,
                    std::deque<std::string> &&requirements,
                    std::unordered_map<std::string, TypedName> &&objects,
                    State &&init,
-                   std::unique_ptr<Condition> &&goal)
+                   Condition &&goal)
     : name(std::move(name)),
       domain(domain),
       requirements(std::move(requirements)),

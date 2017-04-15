@@ -10,43 +10,37 @@
 
 namespace pddl_parser {
 
-class Condition {
+class ConditionBase {
+    friend class CopyableUniquePtr<ConditionBase>;
 protected:
+    virtual ConditionBase * clone() const = 0;
     virtual void print(std::ostream &stream) const = 0;
 public:
     friend std::ostream& operator<<(std::ostream &stream,
-                                    Condition const &condition);
+                                    ConditionBase const &condition);
 };
 
-class AtomicFormula : public Condition {
+typedef CopyableUniquePtr<ConditionBase> Condition;
+
+class Conjunction : public ConditionBase {
+    std::deque<Condition> conjuncts;
+
+    ConditionBase * clone() const;
+
+public:
+    Conjunction(std::deque<Condition> &&conjuncts);
+    void print(std::ostream &stream) const;
+};
+
+class Literal : public ConditionBase {
     std::string predicate_name;
     std::deque<std::string> parameters;
-
-public:
-    AtomicFormula(std::string &&predicate_name,
-                  std::deque<std::string> &&parameters);
-    void print(std::ostream &stream) const;
-};
-
-class Conjunction : public Condition {
-    std::deque<std::unique_ptr<Condition>> conjuncts;
-
-public:
-    Conjunction(std::deque<std::unique_ptr<Condition>> &&conjuncts);
-    void print(std::ostream &stream) const;
-};
-
-class Truth : public Conjunction {
-public:
-    Truth();
-};
-
-class Literal : public Condition {
     bool negated;
-    AtomicFormula atom;
+
+    ConditionBase * clone() const;
 
 public:
-    Literal(bool negated, AtomicFormula &&atom);
+    Literal(std::string &&predicate_name, std::deque<std::string> &&parameters, bool negated=false);
     void print(std::ostream &stream) const;
 };
 
@@ -58,15 +52,17 @@ enum Comparator {
     GT
 };
 
-class NumericComparison : public Condition {
+class NumericComparison : public ConditionBase {
     Comparator comparator;
-    std::unique_ptr<NumericExpression> lhs;
-    std::unique_ptr<NumericExpression> rhs;
+    NumericExpression lhs;
+    NumericExpression rhs;
+
+    ConditionBase * clone() const;
 
 public:
     NumericComparison(Comparator comparator,
-                      std::unique_ptr<NumericExpression> &&lhs,
-                      std::unique_ptr<NumericExpression> &&rhs);
+                      NumericExpression &&lhs,
+                      NumericExpression &&rhs);
     void print(std::ostream &stream) const;
 };
 

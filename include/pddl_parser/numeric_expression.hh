@@ -6,26 +6,37 @@
 #include <string>
 #include <memory>
 
+#include "copyable_unique_ptr.hh"
+
 namespace pddl_parser {
 
-class NumericExpression {
+class NumericExpressionBase {
+    friend class CopyableUniquePtr<NumericExpressionBase>;
 protected:
+    virtual NumericExpressionBase * clone() const = 0;
     virtual void print(std::ostream& stream) const = 0;
 public:
     friend std::ostream& operator<<(std::ostream &stream,
-                                    NumericExpression const &num_exp);
+                                    NumericExpressionBase const &num_exp);
 };
 
-class Number : public NumericExpression {
+typedef CopyableUniquePtr<NumericExpressionBase> NumericExpression;
+
+class Number : public NumericExpressionBase {
     double value;
+
+    NumericExpressionBase * clone() const;
+
 public:
     Number(double value);
     void print(std::ostream& stream) const;
 };
 
-class AtomicExpression : public NumericExpression {
+class AtomicExpression : public NumericExpressionBase {
     std::string function_name;
     std::deque<std::string> parameters;
+
+    NumericExpressionBase * clone() const;
 
 public:
     AtomicExpression(std::string &&function_name,
@@ -40,23 +51,28 @@ enum BinaryOperator {
     DIV
 };
 
-class BinaryExpression : public NumericExpression {
+class BinaryExpression : public NumericExpressionBase {
     BinaryOperator binary_operator;
-    std::unique_ptr<NumericExpression> lhs;
-    std::unique_ptr<NumericExpression> rhs;
+    NumericExpression lhs;
+    NumericExpression rhs;
+
+    NumericExpressionBase * clone() const;
 
 public:
     BinaryExpression(BinaryOperator binary_operator,
-                     std::unique_ptr<NumericExpression> &&lhs,
-                     std::unique_ptr<NumericExpression> &&rhs);
+                     NumericExpression &&lhs,
+                     NumericExpression &&rhs);
     void print(std::ostream& stream) const;
 };
 
-class InverseExpression : public NumericExpression {
-    std::unique_ptr<NumericExpression> expression;
+class InverseExpression : public NumericExpressionBase {
+    NumericExpression expression;
+    CopyableUniquePtr<NumericExpressionBase> expression_;
+
+    NumericExpressionBase * clone() const;
 
 public:
-    InverseExpression(std::unique_ptr<NumericExpression> &&expression);
+    InverseExpression(NumericExpression &&expression);
     void print(std::ostream& stream) const;
 };
 

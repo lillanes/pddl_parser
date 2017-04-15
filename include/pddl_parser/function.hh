@@ -17,6 +17,7 @@ protected:
     virtual void print(std::ostream &stream) const;
 
 public:
+    Function() = default;
     Function(std::string &&name, std::deque<TypedName> &&variables);
 
     friend std::ostream& operator<<(std::ostream &stream,
