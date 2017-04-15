@@ -10,6 +10,7 @@ class TypedName {
     std::string type_name;
 
 public:
+    TypedName() = default;
     TypedName(std::string &&name);
     TypedName(std::string &&name, std::string &&type_name);
     friend std::ostream & operator<<(std::ostream &stream,

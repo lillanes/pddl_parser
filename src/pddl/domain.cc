@@ -20,6 +20,30 @@ Domain::Domain(std::string &&name,
       actions(std::move(actions)) {
 }
 
+Domain::Domain(std::string &&name,
+               std::deque<std::string> &&requirements,
+               std::deque<TypedName> &&types,
+               std::deque<TypedName> &&constants,
+               std::deque<Predicate> &&predicates,
+               std::deque<Function> &&functions,
+               std::deque<Action> &&actions)
+    : name(std::move(name)),
+      requirements(std::move(requirements)),
+      types(),
+      constants(),
+      predicates(std::move(predicates)),
+      functions(std::move(functions)),
+      actions(std::move(actions)) {
+    for (TypedName &type : types) {
+        std::string key(type.get_name());
+        this->types[key] = std::move(type);
+    }
+    for (TypedName &constant : constants) {
+        std::string key(constant.get_name());
+        this->constants[key] = std::move(constant);
+    }
+}
+
 std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     stream << "( define ( domain " << domain.name << " )" << std::endl;
 

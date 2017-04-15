@@ -30,6 +30,13 @@ public:
            std::deque<Predicate> &&predicates,
            std::deque<Function> &&functions,
            std::deque<Action> &&actions);
+    Domain(std::string &&name,
+           std::deque<std::string> &&requirements,
+           std::deque<TypedName> &&types,
+           std::deque<TypedName> &&constants,
+           std::deque<Predicate> &&predicates,
+           std::deque<Function> &&functions,
+           std::deque<Action> &&actions);
 
     friend std::ostream& operator<<(std::ostream &stream, Domain const &domain);
 
