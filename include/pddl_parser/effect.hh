@@ -1,5 +1,5 @@
-#ifndef PDDL_PARSER_EFFECT_H
-#define PDDL_PARSER_EFFECT_H
+#ifndef PDDL_PARSER_EFFECT_HH
+#define PDDL_PARSER_EFFECT_HH
 
 #include <deque>
 #include <iostream>
@@ -71,4 +71,4 @@ public:
 
 } // namespace pddl_parser
 
-#endif // PDDL_PARSER_EFFECT_H
+#endif // PDDL_PARSER_EFFECT_HH

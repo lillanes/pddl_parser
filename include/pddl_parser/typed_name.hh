@@ -1,5 +1,5 @@
-#ifndef PDDL_PARSER_TYPED_NAME_H
-#define PDDL_PARSER_TYPED_NAME_H
+#ifndef PDDL_PARSER_TYPED_NAME_HH
+#define PDDL_PARSER_TYPED_NAME_HH
 
 #include <string>
 
@@ -22,4 +22,4 @@ public:
 
 } // namespace pddl_parser
 
-#endif // PDDL_PARSER_TYPED_NAME_H
+#endif // PDDL_PARSER_TYPED_NAME_HH

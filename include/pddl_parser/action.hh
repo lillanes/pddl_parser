@@ -1,5 +1,5 @@
-#ifndef PDDL_PARSER_ACTION_H
-#define PDDL_PARSER_ACTION_H
+#ifndef PDDL_PARSER_ACTION_HH
+#define PDDL_PARSER_ACTION_HH
 
 #include <deque>
 #include <iostream>
@@ -30,4 +30,4 @@ public:
 
 } // namespace pddl_parser
 
-#endif // PDDL_PARSER_ACTION_H
+#endif // PDDL_PARSER_ACTION_HH

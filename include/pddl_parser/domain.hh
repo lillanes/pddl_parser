@@ -1,5 +1,5 @@
-#ifndef PDDL_PARSER_DOMAIN_H
-#define PDDL_PARSER_DOMAIN_H
+#ifndef PDDL_PARSER_DOMAIN_HH
+#define PDDL_PARSER_DOMAIN_HH
 
 #include <deque>
 #include <iostream>
@@ -45,4 +45,4 @@ public:
 
 } // namespace pddl_parser
 
-#endif // PDDL_PARSER_DOMAIN_H
+#endif // PDDL_PARSER_DOMAIN_HH

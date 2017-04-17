@@ -1,5 +1,5 @@
-#ifndef PDDL_PARSER_STATE_H
-#define PDDL_PARSER_STATE_H
+#ifndef PDDL_PARSER_STATE_HH
+#define PDDL_PARSER_STATE_HH
 
 #include <deque>
 #include <utility>
@@ -20,4 +20,4 @@ public:
 
 } // namespace pddl_parser
 
-#endif // PDDL_PARSER_STATE_H
+#endif // PDDL_PARSER_STATE_HH

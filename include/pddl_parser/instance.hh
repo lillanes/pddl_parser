@@ -1,5 +1,5 @@
-#ifndef PDDL_PARSER_INSTANCE_H
-#define PDDL_PARSER_INSTANCE_H
+#ifndef PDDL_PARSER_INSTANCE_HH
+#define PDDL_PARSER_INSTANCE_HH
 
 #include <deque>
 #include <unordered_map>
@@ -29,4 +29,4 @@ public:
 
 } // namespace pddl_parser
 
-#endif // PDDL_PARSER_INSTANCE_H
+#endif // PDDL_PARSER_INSTANCE_HH

@@ -1,5 +1,5 @@
-#ifndef PDDL_PARSER_FUNCTION_H
-#define PDDL_PARSER_FUNCTION_H
+#ifndef PDDL_PARSER_FUNCTION_HH
+#define PDDL_PARSER_FUNCTION_HH
 
 #include <iostream>
 #include <string>
@@ -26,4 +26,4 @@ public:
 
 } // namespace pddl_parser
 
-#endif // PDDL_PARSER_FUNCTION_H
+#endif // PDDL_PARSER_FUNCTION_HH
