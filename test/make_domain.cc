@@ -20,8 +20,8 @@ using namespace pddl_parser;
 
 int main(int, char **argv) {
     std::deque<std::string> requirements;
-    std::unordered_map<std::string, TypedName> types;
-    std::unordered_map<std::string, TypedName> constants;
+    std::deque<TypedName> types;
+    std::deque<TypedName> constants;
     std::deque<Predicate> predicates;
     std::deque<Function> functions;
     std::deque<Action> actions;
@@ -36,12 +36,12 @@ int main(int, char **argv) {
     requirements.emplace_back(":typing");
     requirements.emplace_back(":fluents");
 
-    types.emplace("locatable", TypedName("locatable"));
-    types.emplace("location", TypedName("location"));
-    types.emplace("truck", TypedName("truck", "locatable"));
-    types.emplace("box", TypedName("box", "locatable"));
+    types.emplace_back("locatable");
+    types.emplace_back("location");
+    types.emplace_back("truck", "locatable");
+    types.emplace_back("box", "locatable");
 
-    constants.emplace("depot", TypedName("depot", "location"));
+    constants.emplace_back("depot", "location");
 
     variables.emplace_back("?x", "locatable");
     variables.emplace_back("?l", "location");

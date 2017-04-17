@@ -25,6 +25,8 @@ public:
            Condition &&condition,
            std::deque<Effect> &&effects);
 
+    std::string const & get_name() const { return name; }
+
     friend std::ostream& operator<<(std::ostream &stream, Action const &action);
 };
 

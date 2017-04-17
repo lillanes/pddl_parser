@@ -1,3 +1,4 @@
+#include <map>
 #include <utility>
 
 #include "domain.hh"
@@ -6,11 +7,11 @@ namespace pddl_parser {
 
 Domain::Domain(std::string &&name,
                std::deque<std::string> &&requirements,
-               std::unordered_map<std::string, TypedName> &&types,
-               std::unordered_map<std::string, TypedName> &&constants,
-               std::deque<Predicate> &&predicates,
-               std::deque<Function> &&functions,
-               std::deque<Action> &&actions)
+               std::unordered_map<std::string,TypedName> &&types,
+               std::unordered_map<std::string,TypedName> &&constants,
+               std::unordered_map<std::string,Predicate> &&predicates,
+               std::unordered_map<std::string,Function> &&functions,
+               std::unordered_map<std::string,Action> &&actions)
     : name(std::move(name)),
       requirements(std::move(requirements)),
       types(std::move(types)),
@@ -28,12 +29,7 @@ Domain::Domain(std::string &&name,
                std::deque<Function> &&functions,
                std::deque<Action> &&actions)
     : name(std::move(name)),
-      requirements(std::move(requirements)),
-      types(),
-      constants(),
-      predicates(std::move(predicates)),
-      functions(std::move(functions)),
-      actions(std::move(actions)) {
+      requirements(std::move(requirements)) {
     for (TypedName &type : types) {
         std::string key(type.get_name());
         this->types[key] = std::move(type);
@@ -41,6 +37,18 @@ Domain::Domain(std::string &&name,
     for (TypedName &constant : constants) {
         std::string key(constant.get_name());
         this->constants[key] = std::move(constant);
+    }
+    for (Predicate &predicate : predicates) {
+        std::string key(predicate.get_name());
+        this->predicates[key] = std::move(predicate);
+    }
+    for (Function &function : functions) {
+        std::string key(function.get_name());
+        this->functions[key] = std::move(function);
+    }
+    for (Action &action : actions) {
+        std::string key(action.get_name());
+        this->actions[key] = std::move(action);
     }
 }
 
@@ -54,31 +62,41 @@ std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     stream << ")" << std::endl;
 
     stream << "  ( :types";
-    for (auto const &t : domain.types) {
+    std::map<std::string,TypedName> ordered_types(domain.types.begin(),
+                                                  domain.types.end());
+    for (auto const &t : ordered_types) {
         stream << std::endl << "    " << t.second;
     }
     stream << " )" << std::endl;
 
     stream << "  ( :constants";
-    for (auto const &c : domain.constants) {
+    std::map<std::string,TypedName> ordered_constants(domain.constants.begin(),
+                                                      domain.constants.end());
+    for (auto const &c : ordered_constants) {
         stream << std::endl << "    " << c.second;
     }
     stream << " )" << std::endl;
 
     stream << "  ( :predicates";
-    for (auto const &p : domain.predicates) {
-        stream << std::endl << "    " << p;
+    std::map<std::string,Predicate> ordered_predicates(
+        domain.predicates.begin(), domain.predicates.end());
+    for (auto const &p : ordered_predicates) {
+        stream << std::endl << "    " << p.second;
     }
     stream << " )" << std::endl;
 
     stream << "  ( :functions";
-    for (auto const &f : domain.functions) {
-        stream << std::endl << "    " << f;
+    std::map<std::string,Function> ordered_functions(domain.functions.begin(),
+                                                     domain.functions.end());
+    for (auto const &f : ordered_functions) {
+        stream << std::endl << "    " << f.second;
     }
     stream << " )";
 
-    for (auto const &a : domain.actions) {
-        stream << std::endl << a;
+    std::map<std::string,Action> ordered_actions(domain.actions.begin(),
+                                                 domain.actions.end());
+    for (auto const &a : ordered_actions) {
+        stream << std::endl << a.second;
     }
 
     stream << std::endl << " )" << std::endl;

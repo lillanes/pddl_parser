@@ -20,6 +20,8 @@ public:
     Function() = default;
     Function(std::string &&name, std::deque<TypedName> &&variables);
 
+    std::string const & get_name() const { return name; }
+
     friend std::ostream& operator<<(std::ostream &stream,
                                     Function const &function);
 };
