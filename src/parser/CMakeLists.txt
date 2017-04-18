@@ -27,16 +27,6 @@ set_source_files_properties(${BISON_GENERATED_SOURCES} ${BISON_GENERATED_HEADERS
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-add_executable(
-  example
-  EXCLUDE_FROM_ALL
-  ${sources}
-  ${BISON_GENERATED_SOURCES}
-  ${FLEX_PDDLScanner_OUTPUTS}
-)
-
-target_link_libraries(example pddl)
-
 add_library(
   parser
   STATIC
@@ -46,3 +36,11 @@ add_library(
 )
 
 target_link_libraries(parser pddl)
+
+add_executable(
+  example
+  EXCLUDE_FROM_ALL
+  example.cc
+)
+
+target_link_libraries(example parser pddl)

@@ -52,14 +52,69 @@ Domain::Domain(std::string &&name,
     }
 }
 
+Domain::Domain(std::string &&name)
+    : name(std::move(name)) {
+}
+
+Predicate const& Domain::get_predicate(std::string &name) const {
+    return predicates.at(name);
+}
+
+Function const& Domain::get_function(std::string &name) const {
+    return functions.at(name);
+}
+
+TypedName const& Domain::get_constant(std::string &name) const {
+    return constants.at(name);
+}
+
+void Domain::set_requirements(std::deque<std::string> &&requirements) {
+    this->requirements = std::move(requirements);
+}
+
+void Domain::set_types(std::deque<TypedName> &&types) {
+    for (TypedName &type : types) {
+        std::string key(type.get_name());
+        this->types[key] = std::move(type);
+    }
+}
+
+void Domain::set_constants(std::deque<TypedName> &&constants) {
+    for (TypedName &constant : constants) {
+        std::string key(constant.get_name());
+        this->constants[key] = std::move(constant);
+    }
+}
+
+void Domain::set_predicates(std::deque<Predicate> &&predicates) {
+    for (Predicate &predicate : predicates) {
+        std::string key(predicate.get_name());
+        this->predicates[key] = std::move(predicate);
+    }
+}
+
+void Domain::set_functions(std::deque<Function> &&functions) {
+    for (Function &function : functions) {
+        std::string key(function.get_name());
+        this->functions[key] = std::move(function);
+    }
+}
+
+void Domain::add_action( pddl_parser::Action &&action ) {
+    std::string key(action.get_name());
+    this->actions[key] = std::move(action);
+}
+
 std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     stream << "( define ( domain " << domain.name << " )" << std::endl;
 
-    stream << "  ( :requirements ";
-    for (auto const &r : domain.requirements) {
-        stream << r << " ";
+    if (!domain.requirements.empty()) {
+        stream << "  ( :requirements ";
+        for (auto const &r : domain.requirements) {
+            stream << r << " ";
+        }
+        stream << ")" << std::endl;
     }
-    stream << ")" << std::endl;
 
     stream << "  ( :types";
     std::map<std::string,TypedName> ordered_types(domain.types.begin(),

@@ -38,6 +38,20 @@ public:
            std::deque<Predicate> &&predicates,
            std::deque<Function> &&functions,
            std::deque<Action> &&actions);
+    Domain(std::string &&name);
+
+    std::string &get_name() { return name; }
+
+    Predicate const& get_predicate(std::string &name) const;
+    Function const& get_function(std::string &name) const;
+    TypedName const& get_constant(std::string &name) const;
+
+    void set_requirements(std::deque<std::string> &&requirements);
+    void set_types(std::deque<TypedName> &&types);
+    void set_constants(std::deque<TypedName> &&constants);
+    void set_predicates(std::deque<Predicate> &&predicates);
+    void set_functions(std::deque<Function> &&functions);
+    void add_action(Action &&action);
 
     friend std::ostream& operator<<(std::ostream &stream, Domain const &domain);
 

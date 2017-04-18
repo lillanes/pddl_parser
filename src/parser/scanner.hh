@@ -19,18 +19,23 @@ class Scanner : public yyFlexLexer {
     friend class Parser;
 public:
     Scanner() = default;
-    virtual ~Scanner() {}
     virtual pddl_parser::Parser::symbol_type get_next_token();
+
+    void initialize_location(std::string const &filename) {
+        this->filename = filename;
+        location.initialize(&this->filename);
+    }
 
 private:
     pddl_parser::location location;
+    std::string filename;
 
-    void incrementLocation(size_t loc) {
+    void increment_location(size_t loc) {
         location.step();
         location += loc;
     }
 
-    void incrementLocationLine(size_t loc) {
+    void increment_location_line(size_t loc) {
         location.lines(loc);
     }
 };

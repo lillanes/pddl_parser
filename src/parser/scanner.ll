@@ -16,7 +16,7 @@
 /* This is executed with every call to yylex. We just use it to keep
 * the location updated.
 */
-#define YY_USER_ACTION incrementLocation(yyleng);
+#define YY_USER_ACTION increment_location(yyleng);
 %}
 
 %option nodefault
@@ -119,7 +119,7 @@
 
 ";".*  { /* Comment. Will match until EOL */ }
 
-\n+    { incrementLocationLine(yyleng); }
+\n+    { increment_location_line(yyleng); }
 
 . {}
 

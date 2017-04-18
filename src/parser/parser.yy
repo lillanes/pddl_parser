@@ -18,10 +18,7 @@
 {
     #include <deque>
     #include <iterator>
-    #include <memory>
     #include <string>
-    #include <tuple>
-    #include <unordered_set>
     #include <utility>
 
     #include "action.hh"
@@ -29,8 +26,10 @@
     #include "domain.hh"
     #include "effect.hh"
     #include "function.hh"
+    #include "instance.hh"
     #include "numeric_expression.hh"
     #include "predicate.hh"
+    #include "state.hh"
     #include "typed_name.hh"
 
     // Forward declarations
@@ -55,7 +54,7 @@
 %param { pddl_parser::Scanner &scanner }
 
 // Parameters only for the parser:
-%parse-param { pddl_parser::Domain &domain }
+%parse-param { std::pair<pddl_parser::Domain,std::deque<pddl_parser::Instance>> &output }
 
 %locations
 %initial-action
@@ -134,6 +133,7 @@
 %type <std::deque<TypedName>>
     types_def
     constants_def
+    object_declaration
     typed_list_name
     typed_list_variable
 
@@ -150,18 +150,13 @@
     atomic_function_skeleton_star
     atomic_function_skeleton_plus
 
-%type <Action>
-    action_def
-    structure_def
-%type <std::deque<Action>>
-    structure_def_plus structure_def_star
-
 %type <std::pair<Condition, std::deque<Effect>>> action_def_body
 
 %type <Condition>
     goal_description
     literal
     f_comp
+    goal
 %type <std::deque<Condition>>
     goal_description_plus goal_description_star
 
@@ -175,65 +170,67 @@
     p_effect_plus p_effect_star
     effect
 
-%type <std::tuple<std::deque<std::string>,
-                  std::deque<TypedName>,
-                  std::deque<TypedName>,
-                  std::deque<Predicate>,
-                  std::deque<Function>,
-                  std::deque<Action>>>
-    domain_parts
-
-%start domain
+%start pddl
 
 %%
 
+pddl: domain | problem;
+
 domain:
     "(" "define" "(" "domain" NAME ")"
+    {
+        output.first = Domain(std::move($5));
+    }
     domain_parts ")"
-{
-    domain = Domain(std::move($5),
-                    std::move(std::get<0>($7)),
-                    std::move(std::get<1>($7)),
-                    std::move(std::get<2>($7)),
-                    std::move(std::get<3>($7)),
-                    std::move(std::get<4>($7)),
-                    std::move(std::get<5>($7)));
-}
+;
+
+problem:
+    "(" "define" "(" "problem" NAME ")"
+    "(" ":domain" NAME ")"
+    {
+        output.second.emplace_back(std::move($5),
+                                   output.first);
+    }
+    problem_parts ")"
 ;
 
 /* This is more general than the BNF spec, as it allows for multiple definitions
    of the same part (e.g. types). It makes it LALR(1) parseable. */
 domain_parts:
-    require_def domain_parts
+    require_def
     {
-        std::get<0>($2) = std::move($1);
-        $$ = std::move($2);
-    }
-  | types_def domain_parts
+        output.first.set_requirements(std::move($1));
+    } domain_parts
+  | types_def
     {
-        std::get<1>($2) = std::move($1);
-        $$ = std::move($2);
-    }
-  | constants_def domain_parts
+        output.first.set_types(std::move($1));
+    } domain_parts
+  | constants_def
     {
-        std::get<2>($2) = std::move($1);
-        $$ = std::move($2);
-    }
-  | predicates_def domain_parts
+        output.first.set_constants(std::move($1));
+    } domain_parts
+  | predicates_def
     {
-        std::get<3>($2) = std::move($1);
-        $$ = std::move($2);
-    }
-  | functions_def domain_parts
+        output.first.set_predicates(std::move($1));
+    } domain_parts
+  | functions_def
     {
-        std::get<4>($2) = std::move($1);
-        $$ = std::move($2);
-    }
+        output.first.set_functions(std::move($1));
+    } domain_parts
   | structure_def_star
-    {
-        std::get<5>($$) = std::move($1);
-    }
   ;
+
+problem_parts:
+    require_def
+    {
+        output.second.back().set_requirements(std::move($1));
+    } problem_parts
+  | object_declaration
+    {
+        output.second.back().set_objects(std::move($1));
+    } problem_parts
+  | init goal
+;
 
 require_def: "(" ":requirements" require_key_plus ")"
 {
@@ -276,20 +273,17 @@ atomic_function_skeleton: "(" NAME typed_list_variable ")"
     $$ = Function(std::move($2), std::move($3));
 };
 
-structure_def: action_def
-{
-    $$ = std::move($1);
-};
+structure_def: action_def;
 
 action_def:
     "(" ":action" NAME
         ":parameters" "(" typed_list_variable ")"
         action_def_body ")"
     {
-        $$ = Action(std::move($3),
-                    std::move($6),
-                    std::move($8.first),
-                    std::move($8.second));
+        output.first.add_action(Action(std::move($3),
+                                       std::move($6),
+                                       std::move($8.first),
+                                       std::move($8.second)));
     }
     ;
 
@@ -318,7 +312,7 @@ action_def_body:
 goal_description:
     "(" ")"
     {
-        std::cout << "empty condition" << std::endl;
+        $$ = Condition(new Conjunction({}));
     }
   | literal
     {
@@ -497,6 +491,32 @@ p_effect:
     }
   ;
 
+object_declaration: "(" ":objects" typed_list_name ")"
+{
+    $$ = std::move($3);
+}
+;
+
+init: "(" ":init" init_el_star ")"
+;
+
+init_el:
+    "(" NAME term_star ")"
+    {
+        output.second.back().add_init_predicate($2, $3);
+    }
+  | "(" "=" f_head NUMBER ")"
+    {
+        output.second.back().add_init_function($3.first, $3.second, $4);
+    }
+  ;
+
+goal: "(" ":goal" goal_description ")"
+{
+    output.second.back().set_goal(std::move($3));
+}
+;
+
 // lists:
 
 type:
@@ -645,18 +665,9 @@ atomic_function_skeleton_star:
     }
   | %empty {};
 
-structure_def_plus: structure_def structure_def_star
-{
-    $2.emplace_front(std::move($1));
-    $$ = std::move($2);
-};
+structure_def_plus: structure_def structure_def_star;
 
-structure_def_star:
-    structure_def_plus
-    {
-        $$ = std::move($1);
-    }
-  | %empty {};
+structure_def_star: structure_def_plus | %empty;
 
 goal_description_plus: goal_description goal_description_star
 {
@@ -683,6 +694,10 @@ p_effect_star:
         $$ = std::move($1);
     }
   | %empty {};
+
+init_el_plus: init_el init_el_star;
+
+init_el_star: init_el_plus | %empty;
 
 %%
 

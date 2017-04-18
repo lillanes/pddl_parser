@@ -8,9 +8,12 @@ include_directories(${CMAKE_SOURCE_DIR}/src/parser)
 
 add_executable(read_domain_test EXCLUDE_FROM_ALL read_domain.cc)
 target_link_libraries(read_domain_test parser)
+add_executable(read_instance_test EXCLUDE_FROM_ALL read_instance.cc)
+target_link_libraries(read_instance_test parser)
 
 add_custom_target(all_test_targets)
-add_dependencies(all_test_targets make_domain_test read_domain_test)
+add_dependencies(all_test_targets
+  make_domain_test read_domain_test read_instance_test)
 
 add_test( # Not really a test, but it forces ctest to build the test targets.
   NAME build_tests
@@ -21,3 +24,7 @@ add_test(
 add_test(
   NAME read_domain_test
   COMMAND read_domain_test ${CMAKE_SOURCE_DIR}/test/golden/trucky.pddl)
+add_test(
+  NAME read_instance_test
+  COMMAND read_instance_test ${CMAKE_SOURCE_DIR}/test/golden/trucky.pddl
+                             ${CMAKE_SOURCE_DIR}/test/golden/trucky_p01.pddl)

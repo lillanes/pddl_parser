@@ -1,49 +1,40 @@
+#include <chrono>
 #include <cstdlib>
 #include <deque>
 #include <iostream>
-#include <time.h>
 
 #include "parser.bison.hh"
 
 #include "domain.hh"
+#include "instance.hh"
 #include "parse.hh"
 #include "scanner.hh"
 
 struct Timer {
     struct timespec start_wall, finish_wall, start_cpu, finish_cpu;
+    std::chrono::steady_clock::time_point start_time, end_time;
 
     void start() {
-        clock_gettime(CLOCK_MONOTONIC, &start_wall);
-        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start_cpu);
+        start_time = std::chrono::steady_clock::now();
     }
-    void finish() {
-        clock_gettime(CLOCK_MONOTONIC, &finish_wall);
-        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &finish_cpu);
+    void stop() {
+        end_time = std::chrono::steady_clock::now();
     }
 
-    double get_wall() {
-        double elapsed;
-        elapsed = (finish_wall.tv_sec - start_wall.tv_sec);
-        elapsed += (finish_wall.tv_nsec - start_wall.tv_nsec) / 1000000000.0;
+    double get_elapsed() {
+        std::chrono::duration<double> elapsed = end_time - start_time;
 
-        return elapsed;
-    }
-    double get_cpu() {
-        double elapsed;
-        elapsed = (finish_cpu.tv_sec - start_cpu.tv_sec);
-        elapsed += (finish_cpu.tv_nsec - start_cpu.tv_nsec) / 1000000000.0;
-
-        return elapsed;
+        return elapsed.count();
     }
 };
 
-void print_usage(const char * name) {
+void print_usage(char const * name) {
     std::cout << "Usage:" << std::endl;
     std::cout << "\t" << name
               << " domain.pddl [problem.pddl [problem2.pddl]...]" << std::endl;
 }
 
-int main(const int argc, const char **argv) {
+int main(int const argc, char const **argv) {
     if (argc < 2) {
         print_usage(argv[0]);
     }
@@ -52,11 +43,15 @@ int main(const int argc, const char **argv) {
 
         try {
             timer.start();
-            pddl_parser::Domain domain = pddl_parser::parse(argv[1]);
-            timer.finish();
-            std::cout << domain;
-            std::cout << "Total time: " << timer.get_wall() << " seconds ("
-                      << timer.get_cpu() << " CPU)." << std::endl;
+            auto output = pddl_parser::parse(
+                argv[1], std::deque<char const *>(argv + 2, argv + argc));
+            timer.stop();
+            std::cout << output.first;
+            for (auto const &i : output.second) {
+                std::cout << i;
+            }
+            std::cout << "Parsing took "
+                      << timer.get_elapsed() << " seconds." << std::endl;
         }
         catch (int error) {
             return error;
