@@ -3,12 +3,9 @@
 #include <deque>
 #include <iostream>
 
-#include "parser.bison.hh"
-
 #include "domain.hh"
 #include "instance.hh"
 #include "parse.hh"
-#include "scanner.hh"
 
 struct Timer {
     struct timespec start_wall, finish_wall, start_cpu, finish_cpu;

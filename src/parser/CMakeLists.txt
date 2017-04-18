@@ -36,11 +36,3 @@ add_library(
 )
 
 target_link_libraries(parser pddl)
-
-add_executable(
-  example
-  EXCLUDE_FROM_ALL
-  example.cc
-)
-
-target_link_libraries(example parser pddl)
