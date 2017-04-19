@@ -26,13 +26,6 @@ public:
     Domain() = default;
     Domain(std::string &&name,
            std::deque<std::string> &&requirements,
-           std::unordered_map<std::string,TypedName> &&types,
-           std::unordered_map<std::string,TypedName> &&constants,
-           std::unordered_map<std::string,Predicate> &&predicates,
-           std::unordered_map<std::string,Function> &&functions,
-           std::unordered_map<std::string,Action> &&actions);
-    Domain(std::string &&name,
-           std::deque<std::string> &&requirements,
            std::deque<TypedName> &&types,
            std::deque<TypedName> &&constants,
            std::deque<Predicate> &&predicates,

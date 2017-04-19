@@ -10,9 +10,6 @@
 
 namespace pddl_parser {
 
-// Domain parse_domain(std::string const &domain_fn);
-// Instance parse_instance(Domain &domain, std::string const &domain_fn);
-
 std::pair<Domain,std::deque<Instance>> parse(
     char const *domain_fn, std::deque<char const *> instance_fns={});
 

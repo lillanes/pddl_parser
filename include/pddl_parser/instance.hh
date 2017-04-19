@@ -22,6 +22,10 @@ class Instance {
     State init;
     Condition goal;
 
+    Predicate const& get_predicate(std::string &name) const;
+    Function const& get_function(std::string &name) const;
+    TypedName const& get_object(std::string &name) const;
+
     GroundPredicate ground_predicate(std::string &name,
                                      std::deque<std::string> &parameters) const;
     GroundFunction ground_function(std::string &name,
@@ -29,23 +33,7 @@ class Instance {
                                    double value) const;
 
 public:
-    Instance(std::string &&name,
-             Domain &domain,
-             std::deque<std::string> &&requirements,
-             std::unordered_map<std::string, TypedName> &&objects,
-             State &&init,
-             Condition &&goal);
-    Instance(std::string &&name,
-             Domain &domain,
-             std::deque<std::string> &&requirements,
-             std::deque<TypedName> &&objects,
-             State &&init,
-             Condition &&goal);
     Instance(std::string &&name, Domain &domain);
-
-    Predicate const& get_predicate(std::string &name) const;
-    Function const& get_function(std::string &name) const;
-    TypedName const& get_object(std::string &name) const;
 
     void set_requirements(std::deque<std::string> &&requirements);
     void set_objects(std::deque<TypedName> &&objects);

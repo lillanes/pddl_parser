@@ -26,10 +26,10 @@ class Number : public NumericExpressionBase {
     double value;
 
     NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 
 public:
     Number(double value);
-    void print(std::ostream& stream) const;
 };
 
 class AtomicExpression : public NumericExpressionBase {
@@ -37,11 +37,11 @@ class AtomicExpression : public NumericExpressionBase {
     std::deque<std::string> parameters;
 
     NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 
 public:
     AtomicExpression(std::string &&function_name,
                      std::deque<std::string> &&parameters);
-    void print(std::ostream& stream) const;
 };
 
 enum BinaryOperator {
@@ -57,12 +57,12 @@ class BinaryExpression : public NumericExpressionBase {
     NumericExpression rhs;
 
     NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 
 public:
     BinaryExpression(BinaryOperator binary_operator,
                      NumericExpression &&lhs,
                      NumericExpression &&rhs);
-    void print(std::ostream& stream) const;
 };
 
 class InverseExpression : public NumericExpressionBase {
@@ -70,10 +70,10 @@ class InverseExpression : public NumericExpressionBase {
     CopyableUniquePtr<NumericExpressionBase> expression_;
 
     NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 
 public:
     InverseExpression(NumericExpression &&expression);
-    void print(std::ostream& stream) const;
 };
 
 } // namespace pddl_parser

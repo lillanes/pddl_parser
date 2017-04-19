@@ -7,22 +7,6 @@ namespace pddl_parser {
 
 Domain::Domain(std::string &&name,
                std::deque<std::string> &&requirements,
-               std::unordered_map<std::string,TypedName> &&types,
-               std::unordered_map<std::string,TypedName> &&constants,
-               std::unordered_map<std::string,Predicate> &&predicates,
-               std::unordered_map<std::string,Function> &&functions,
-               std::unordered_map<std::string,Action> &&actions)
-    : name(std::move(name)),
-      requirements(std::move(requirements)),
-      types(std::move(types)),
-      constants(std::move(constants)),
-      predicates(std::move(predicates)),
-      functions(std::move(functions)),
-      actions(std::move(actions)) {
-}
-
-Domain::Domain(std::string &&name,
-               std::deque<std::string> &&requirements,
                std::deque<TypedName> &&types,
                std::deque<TypedName> &&constants,
                std::deque<Predicate> &&predicates,

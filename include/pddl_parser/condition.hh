@@ -26,10 +26,10 @@ class Conjunction : public ConditionBase {
     std::deque<Condition> conjuncts;
 
     ConditionBase * clone() const;
+    void print(std::ostream &stream) const;
 
 public:
     Conjunction(std::deque<Condition> &&conjuncts);
-    void print(std::ostream &stream) const;
 };
 
 class Literal : public ConditionBase {
@@ -38,10 +38,12 @@ class Literal : public ConditionBase {
     bool negated;
 
     ConditionBase * clone() const;
+    void print(std::ostream &stream) const;
 
 public:
-    Literal(std::string &&predicate_name, std::deque<std::string> &&parameters, bool negated=false);
-    void print(std::ostream &stream) const;
+    Literal(std::string &&predicate_name,
+            std::deque<std::string> &&parameters,
+            bool negated=false);
 };
 
 enum Comparator {
@@ -58,12 +60,12 @@ class NumericComparison : public ConditionBase {
     NumericExpression rhs;
 
     ConditionBase * clone() const;
+    void print(std::ostream &stream) const;
 
 public:
     NumericComparison(Comparator comparator,
                       NumericExpression &&lhs,
                       NumericExpression &&rhs);
-    void print(std::ostream &stream) const;
 };
 
 } // namespace pddl_parser

@@ -13,11 +13,11 @@ public:
     TypedName() = default;
     TypedName(std::string &&name);
     TypedName(std::string &&name, std::string &&type_name);
-    friend std::ostream & operator<<(std::ostream &stream,
-                                     const TypedName &tn);
 
     std::string const &get_name() const { return name; }
-    std::string const &get_type_name() const { return type_name; }
+
+    friend std::ostream & operator<<(std::ostream &stream,
+                                     const TypedName &tn);
 };
 
 } // namespace pddl_parser

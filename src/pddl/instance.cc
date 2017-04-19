@@ -5,37 +5,6 @@
 
 namespace pddl_parser {
 
-Instance::Instance(std::string &&name,
-                   Domain &domain,
-                   std::deque<std::string> &&requirements,
-                   std::unordered_map<std::string,TypedName> &&objects,
-                   State &&init,
-                   Condition &&goal)
-    : name(std::move(name)),
-      domain(domain),
-      requirements(std::move(requirements)),
-      objects(std::move(objects)),
-      init(std::move(init)),
-      goal(std::move(goal)) {
-}
-
-Instance::Instance(std::string &&name,
-                   Domain &domain,
-                   std::deque<std::string> &&requirements,
-                   std::deque<TypedName> &&objects,
-                   State &&init,
-                   Condition &&goal)
-    : name(std::move(name)),
-      domain(domain),
-      requirements(std::move(requirements)),
-      init(std::move(init)),
-      goal(std::move(goal)) {
-    for (TypedName &object : objects) {
-        std::string key(object.get_name());
-        this->objects[key] = std::move(object);
-    }
-}
-
 Instance::Instance(std::string &&name, Domain &domain)
     : name(std::move(name)),
       domain(domain) {

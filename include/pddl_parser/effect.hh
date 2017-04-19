@@ -26,11 +26,11 @@ class AddEffect : public EffectBase {
     std::deque<std::string> parameters;
 
     EffectBase * clone() const;
+    void print(std::ostream &stream) const;
 
 public:
     AddEffect(std::string &&predicate_name,
               std::deque<std::string> &&parameters);
-    void print(std::ostream &stream) const;
 };
 
 class DeleteEffect : public EffectBase {
@@ -38,11 +38,11 @@ class DeleteEffect : public EffectBase {
     std::deque<std::string> parameters;
 
     EffectBase * clone() const;
+    void print(std::ostream &stream) const;
 
 public:
     DeleteEffect(std::string &&predicate_name,
                  std::deque<std::string> &&parameters);
-    void print(std::ostream &stream) const;
 };
 
 enum AssignmentOperator {
@@ -60,13 +60,13 @@ class NumericEffect : public EffectBase {
     NumericExpression expression;
 
     EffectBase * clone() const;
+    void print(std::ostream &stream) const;
 
 public:
     NumericEffect(AssignmentOperator assignment_operator,
                   std::string &&function_name,
                   std::deque<std::string> &&parameters,
                   NumericExpression &&expression);
-    void print(std::ostream &stream) const;
 };
 
 } // namespace pddl_parser
