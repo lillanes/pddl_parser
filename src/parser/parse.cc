@@ -38,4 +38,11 @@ std::pair<Domain,std::deque<Instance>> parse(
     return output;
 }
 
+std::pair<Domain,Instance> parse(char const *domain_fn,
+                                 char const *instance_fn) {
+    auto parsed = parse(domain_fn, std::deque<char const *>(1,instance_fn));
+
+    return std::make_pair(parsed.first, parsed.second[0]);
+}
+
 } // namespace pddl_parser
