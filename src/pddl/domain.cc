@@ -36,10 +36,6 @@ Domain::Domain(std::string &&name,
     }
 }
 
-Domain::Domain(std::string &&name)
-    : name(std::move(name)) {
-}
-
 Predicate const& Domain::get_predicate(std::string &name) const {
     return predicates.at(name);
 }
@@ -50,6 +46,10 @@ Function const& Domain::get_function(std::string &name) const {
 
 TypedName const& Domain::get_constant(std::string &name) const {
     return constants.at(name);
+}
+
+void Domain::set_name(std::string &&name) {
+    this->name = std::move(name);
 }
 
 void Domain::set_requirements(std::deque<std::string> &&requirements) {

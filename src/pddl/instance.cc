@@ -5,9 +5,12 @@
 
 namespace pddl_parser {
 
-Instance::Instance(std::string &&name, Domain &domain)
-    : name(std::move(name)),
-      domain(domain) {
+Instance::Instance(Domain &domain)
+    : domain(domain) {
+}
+
+void Instance::set_name(std::string &&name) {
+    this->name = std::move(name);
 }
 
 void Instance::set_requirements(std::deque<std::string> &&requirements) {

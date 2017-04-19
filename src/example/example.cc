@@ -7,6 +7,8 @@
 #include "instance.hh"
 #include "parse.hh"
 
+using namespace pddl_parser;
+
 struct Timer {
     struct timespec start_wall, finish_wall, start_cpu, finish_cpu;
     std::chrono::steady_clock::time_point start_time, end_time;
@@ -40,15 +42,19 @@ int main(int const argc, char const **argv) {
 
         try {
             timer.start();
-            auto output = pddl_parser::parse(
-                argv[1], std::deque<char const *>(argv + 2, argv + argc));
+            Domain domain = parse_domain(argv[1]);
             timer.stop();
-            std::cout << output.first;
-            for (auto const &i : output.second) {
-                std::cout << i;
-            }
+            std::cout << domain;
             std::cout << "Parsing took "
                       << timer.get_elapsed() << " seconds." << std::endl;
+            for (int i = 2; i < argc; ++i) {
+                timer.start();
+                Instance instance = parse_instance(domain, argv[i]);
+                timer.stop();
+                std::cout << instance;
+                std::cout << "Parsing took "
+                          << timer.get_elapsed() << " seconds." << std::endl;
+            }
         }
         catch (int error) {
             return error;

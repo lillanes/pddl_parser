@@ -14,6 +14,9 @@
 namespace pddl_parser {
 
 class Domain {
+    friend class Parser;
+    friend class Instance;
+
     std::string name;
     std::deque<std::string> requirements;
     std::unordered_map<std::string,TypedName> types;
@@ -21,6 +24,17 @@ class Domain {
     std::unordered_map<std::string,Predicate> predicates;
     std::unordered_map<std::string,Function> functions;
     std::unordered_map<std::string,Action> actions;
+
+    void set_name(std::string &&name);
+    void set_requirements(std::deque<std::string> &&requirements);
+    void set_types(std::deque<TypedName> &&types);
+    void set_constants(std::deque<TypedName> &&constants);
+    void set_predicates(std::deque<Predicate> &&predicates);
+    void set_functions(std::deque<Function> &&functions);
+
+    Predicate const& get_predicate(std::string &name) const;
+    Function const& get_function(std::string &name) const;
+    TypedName const& get_constant(std::string &name) const;
 
 public:
     Domain() = default;
@@ -31,20 +45,10 @@ public:
            std::deque<Predicate> &&predicates,
            std::deque<Function> &&functions,
            std::deque<Action> &&actions);
-    Domain(std::string &&name);
+
+    void add_action(Action &&action);
 
     std::string &get_name() { return name; }
-
-    Predicate const& get_predicate(std::string &name) const;
-    Function const& get_function(std::string &name) const;
-    TypedName const& get_constant(std::string &name) const;
-
-    void set_requirements(std::deque<std::string> &&requirements);
-    void set_types(std::deque<TypedName> &&types);
-    void set_constants(std::deque<TypedName> &&constants);
-    void set_predicates(std::deque<Predicate> &&predicates);
-    void set_functions(std::deque<Function> &&functions);
-    void add_action(Action &&action);
 
     friend std::ostream& operator<<(std::ostream &stream, Domain const &domain);
 

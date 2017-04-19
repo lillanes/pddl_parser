@@ -9,12 +9,12 @@ using namespace pddl_parser;
 
 int main(int, char **argv) {
 
-    auto parsed = parse(argv[1]);
+    auto parsed = parse_domain(argv[1]);
 
     // Golden file test:
 
     std::ostringstream output;
-    output << parsed.first;
+    output << parsed;
 
     std::ifstream golden_file(argv[1]);
     std::stringstream golden;

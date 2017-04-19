@@ -54,7 +54,8 @@
 %param { pddl_parser::Scanner &scanner }
 
 // Parameters only for the parser:
-%parse-param { std::pair<pddl_parser::Domain,std::deque<pddl_parser::Instance>> &output }
+%parse-param { pddl_parser::Domain &domain }
+%parse-param { pddl_parser::Instance &instance }
 
 %locations
 %initial-action
@@ -179,7 +180,7 @@ pddl: domain | problem;
 domain:
     "(" "define" "(" "domain" NAME ")"
     {
-        output.first = Domain(std::move($5));
+        domain.set_name(std::move($5));
     }
     domain_parts ")"
 ;
@@ -188,8 +189,7 @@ problem:
     "(" "define" "(" "problem" NAME ")"
     "(" ":domain" NAME ")"
     {
-        output.second.emplace_back(std::move($5),
-                                   output.first);
+        instance.set_name(std::move($5));
     }
     problem_parts ")"
 ;
@@ -199,23 +199,23 @@ problem:
 domain_parts:
     require_def
     {
-        output.first.set_requirements(std::move($1));
+        domain.set_requirements(std::move($1));
     } domain_parts
   | types_def
     {
-        output.first.set_types(std::move($1));
+        domain.set_types(std::move($1));
     } domain_parts
   | constants_def
     {
-        output.first.set_constants(std::move($1));
+        domain.set_constants(std::move($1));
     } domain_parts
   | predicates_def
     {
-        output.first.set_predicates(std::move($1));
+        domain.set_predicates(std::move($1));
     } domain_parts
   | functions_def
     {
-        output.first.set_functions(std::move($1));
+        domain.set_functions(std::move($1));
     } domain_parts
   | structure_def_star
   ;
@@ -223,11 +223,11 @@ domain_parts:
 problem_parts:
     require_def
     {
-        output.second.back().set_requirements(std::move($1));
+        instance.set_requirements(std::move($1));
     } problem_parts
   | object_declaration
     {
-        output.second.back().set_objects(std::move($1));
+        instance.set_objects(std::move($1));
     } problem_parts
   | init goal
 ;
@@ -280,7 +280,7 @@ action_def:
         ":parameters" "(" typed_list_variable ")"
         action_def_body ")"
     {
-        output.first.add_action(Action(std::move($3),
+        domain.add_action(Action(std::move($3),
                                        std::move($6),
                                        std::move($8.first),
                                        std::move($8.second)));
@@ -503,17 +503,17 @@ init: "(" ":init" init_el_star ")"
 init_el:
     "(" NAME term_star ")"
     {
-        output.second.back().add_init_predicate($2, $3);
+        instance.add_init_predicate($2, $3);
     }
   | "(" "=" f_head NUMBER ")"
     {
-        output.second.back().add_init_function($3.first, $3.second, $4);
+        instance.add_init_function($3.first, $3.second, $4);
     }
   ;
 
 goal: "(" ":goal" goal_description ")"
 {
-    output.second.back().set_goal(std::move($3));
+    instance.set_goal(std::move($3));
 }
 ;
 

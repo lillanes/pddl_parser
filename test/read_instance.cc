@@ -3,19 +3,20 @@
 #include <sstream>
 
 #include "domain.hh"
+#include "instance.hh"
 #include "parse.hh"
 
 using namespace pddl_parser;
 
 int main(int, char **argv) {
 
-    auto parsed = parse(argv[1],
-                        std::deque<char const *>(argv + 2, argv + 3));
+    Domain domain = parse_domain(argv[1]);
+    Instance instance = parse_instance(domain, argv[2]);
 
     // Golden file test:
 
     std::ostringstream output;
-    output << parsed.second.front();
+    output << instance;
 
     std::ifstream golden_file(argv[2]);
     std::stringstream golden;

@@ -15,6 +15,8 @@
 namespace pddl_parser {
 
 class Instance {
+    friend class Parser;
+
     std::string name;
     Domain &domain;
     std::deque<std::string> requirements;
@@ -32,9 +34,7 @@ class Instance {
                                    std::deque<std::string> &parameters,
                                    double value) const;
 
-public:
-    Instance(std::string &&name, Domain &domain);
-
+    void set_name(std::string &&name);
     void set_requirements(std::deque<std::string> &&requirements);
     void set_objects(std::deque<TypedName> &&objects);
     void add_init_predicate(std::string &name,
@@ -43,6 +43,9 @@ public:
                            std::deque<std::string> &parameters,
                            double value);
     void set_goal(Condition &&goal);
+
+public:
+    Instance(Domain &domain);
 
     friend std::ostream& operator<<(std::ostream &stream,
                                     Instance const &instance);
