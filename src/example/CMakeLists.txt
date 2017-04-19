@@ -1,9 +1,9 @@
 file(GLOB sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc")
 
 add_executable(
-  example
+  pddl_parser_example
   EXCLUDE_FROM_ALL
   ${sources}
 )
 
-target_link_libraries(example parser pddl)
+target_link_libraries(pddl_parser_example pddl_parser pddl)

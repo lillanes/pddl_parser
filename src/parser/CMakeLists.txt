@@ -28,11 +28,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_library(
-  parser
+  pddl_parser
   STATIC
   ${sources}
   ${BISON_GENERATED_SOURCES}
   ${FLEX_PDDLScanner_OUTPUTS}
 )
 
-target_link_libraries(parser pddl)
+target_include_directories(pddl_parser
+  PUBLIC "${PROJECT_SOURCE_DIR}/include/pddl_parser")
+
+target_link_libraries(pddl_parser pddl)

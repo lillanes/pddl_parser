@@ -10,9 +10,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -Werror -std=c++11")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
-include_directories("${CMAKE_SOURCE_DIR}/include/pddl_parser")
-
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(test)
+if (NOT PDDL_PARSER__DISABLE_TESTS)
+  enable_testing()
+  add_subdirectory(test)
+endif()
