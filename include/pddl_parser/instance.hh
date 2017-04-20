@@ -17,6 +17,7 @@ namespace pddl_parser {
 
 class Instance {
     friend class Parser;
+    friend class ObjectFetcher;
 
     std::string name;
     std::string domain_name;

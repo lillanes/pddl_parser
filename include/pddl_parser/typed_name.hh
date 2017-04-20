@@ -16,6 +16,7 @@ public:
     TypedName(std::string &&name, std::string &&type_name);
 
     std::string const &get_name() const { return name; }
+    std::string const &get_type_name() const { return type_name; }
 
     bool validate(std::unordered_map<std::string,TypedName> const &types) const;
 

@@ -17,6 +17,7 @@ namespace pddl_parser {
 class Domain {
     friend class Parser;
     friend class Instance;
+    friend class ObjectFetcher;
 
     std::string name;
     std::unordered_set<std::string> requirements;
