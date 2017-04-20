@@ -43,18 +43,15 @@ int main(int const argc, char const **argv) {
         try {
             timer.start();
             Domain domain = parse_domain(argv[1]);
-            timer.stop();
             std::cout << domain;
-            std::cout << "Parsing took "
-                      << timer.get_elapsed() << " seconds." << std::endl;
             for (int i = 2; i < argc; ++i) {
                 timer.start();
-                Instance instance = parse_instance(domain, argv[i]);
-                timer.stop();
+                Instance instance = parse_instance(argv[i]);
                 std::cout << instance;
-                std::cout << "Parsing took "
-                          << timer.get_elapsed() << " seconds." << std::endl;
             }
+            timer.stop();
+            std::cout << "Parsing took "
+                      << timer.get_elapsed() << " seconds." << std::endl;
         }
         catch (int error) {
             return error;
