@@ -35,7 +35,4 @@ add_library(
   ${FLEX_PDDLScanner_OUTPUTS}
 )
 
-target_include_directories(pddl_parser
-  PUBLIC "${PROJECT_SOURCE_DIR}/include/pddl_parser")
-
 target_link_libraries(pddl_parser pddl)
