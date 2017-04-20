@@ -10,7 +10,10 @@ target_link_libraries(read_instance_test pddl_parser)
 
 add_custom_target(all_test_targets)
 add_dependencies(all_test_targets
-  make_domain_test read_domain_test read_instance_test)
+  make_domain_test
+  read_domain_test
+  read_instance_test
+  pddl_parser_example)
 
 add_test( # Not really a test, but it forces ctest to build the test targets.
   NAME build_tests
@@ -25,3 +28,8 @@ add_test(
   NAME read_instance_test
   COMMAND read_instance_test ${PROJECT_SOURCE_DIR}/test/golden/trucky.pddl
                              ${PROJECT_SOURCE_DIR}/test/golden/trucky_p01.pddl)
+add_test(
+  NAME pddl_parser_example_test
+  COMMAND pddl_parser_example ${PROJECT_SOURCE_DIR}/test/golden/trucky.pddl
+                              ${PROJECT_SOURCE_DIR}/test/golden/trucky_p01.pddl
+                              ${PROJECT_SOURCE_DIR}/test/golden/trucky_p01.pddl)
