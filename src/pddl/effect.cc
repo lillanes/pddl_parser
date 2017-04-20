@@ -28,6 +28,23 @@ void AddEffect::print(std::ostream &stream) const {
     stream << ")";
 }
 
+bool AddEffect::validate(
+    std::unordered_map<std::string,TypedName> const &constants,
+    std::unordered_map<std::string,size_t> const &action_parameters,
+    std::string const &action_name) const {
+    bool valid = true;
+    for (std::string const &parameter : parameters) {
+        if (!action_parameters.count(parameter)
+            && !(constants.count(parameter))) {
+            std::cerr << "ERROR: unknown parameter \"" << parameter << "\""
+                      << " in effects of action \"" << action_name
+                      << "\"" << std::endl;
+            valid = false;
+        }
+    }
+    return valid;
+}
+
 DeleteEffect::DeleteEffect(std::string &&predicate_name,
                            std::deque<std::string> &&parameters)
     : predicate_name(std::move(predicate_name)),
@@ -45,6 +62,23 @@ void DeleteEffect::print(std::ostream &stream) const {
         stream << p << " ";
     }
     stream << ") )";
+}
+
+bool DeleteEffect::validate(
+    std::unordered_map<std::string,TypedName> const &constants,
+    std::unordered_map<std::string,size_t> const &action_parameters,
+    std::string const &action_name) const {
+    bool valid = true;
+    for (std::string const &parameter : parameters) {
+        if (!action_parameters.count(parameter)
+            && !(constants.count(parameter))) {
+            std::cerr << "ERROR: unknown parameter \"" << parameter << "\""
+                      << " in effects of action \"" << action_name
+                      << "\"" << std::endl;
+            valid = false;
+        }
+    }
+    return valid;
 }
 
 NumericEffect::NumericEffect(AssignmentOperator assignment_operator,
@@ -86,6 +120,26 @@ void NumericEffect::print(std::ostream &stream) const {
         stream << p << " ";
     }
     stream << ") " << expression << " )";
+}
+
+bool NumericEffect::validate(
+    std::unordered_map<std::string,TypedName> const &constants,
+    std::unordered_map<std::string,size_t> const &action_parameters,
+    std::string const &action_name) const {
+    bool valid = true;
+    for (std::string const &parameter : parameters) {
+        if (!action_parameters.count(parameter)
+            && !(constants.count(parameter))) {
+            std::cerr << "ERROR: unknown parameter \"" << parameter << "\""
+                      << " in effects of action \"" << action_name
+                      << "\"" << std::endl;
+            valid = false;
+        }
+    }
+    if (!expression->validate(constants, action_parameters, action_name)) {
+        valid = false;
+    }
+    return valid;
 }
 
 } // namespace pddl_parser

@@ -36,14 +36,19 @@ void print_usage(char const * name) {
 int main(int const argc, char const **argv) {
     if (argc < 2) {
         print_usage(argv[0]);
+        return EXIT_SUCCESS;
     }
     else {
         Timer timer;
+        bool valid = true;
 
         try {
             timer.start();
             Domain domain = parse_domain(argv[1]);
             std::cout << domain;
+            if (!domain.validate()) {
+                valid = false;
+            }
             for (int i = 2; i < argc; ++i) {
                 timer.start();
                 Instance instance = parse_instance(argv[i]);
@@ -57,7 +62,11 @@ int main(int const argc, char const **argv) {
             return error;
         }
 
-        return EXIT_SUCCESS;
+        if (valid) {
+            return EXIT_SUCCESS;
+        }
+        else {
+            return EXIT_FAILURE;
+        }
     }
-    return EXIT_SUCCESS;
 }

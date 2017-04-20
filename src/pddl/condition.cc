@@ -37,6 +37,23 @@ void Literal::print(std::ostream &stream) const {
     }
 }
 
+bool Literal::validate(
+    std::unordered_map<std::string,TypedName> const &constants,
+    std::unordered_map<std::string,size_t> const &action_parameters,
+    std::string const &action_name) const {
+    bool valid = true;
+    for (std::string const &parameter : parameters) {
+        if (!action_parameters.count(parameter)
+            && !constants.count(parameter)) {
+            std::cerr << "ERROR: unknown parameter \"" << parameter << "\""
+                      << " in conditions of action \"" << action_name << "\""
+                      << std::endl;
+            valid = false;
+        }
+    }
+    return valid;
+}
+
 Conjunction::Conjunction(std::deque<Condition> &&conjuncts)
     : conjuncts(std::move(conjuncts)) {
 }
@@ -51,6 +68,18 @@ void Conjunction::print(std::ostream &stream) const {
         stream << conjunct << " ";
     }
     stream << ")";
+}
+
+bool Conjunction::validate(
+    std::unordered_map<std::string,TypedName> const &constants,
+    std::unordered_map<std::string,size_t> const &action_parameters,
+    std::string const &action_name) const {
+    bool valid = true;
+    for (Condition const &conjunct : conjuncts) {
+        valid = conjunct->validate(constants, action_parameters, action_name)
+            && valid;
+    }
+    return valid;
 }
 
 NumericComparison::NumericComparison(Comparator comparator,
@@ -88,6 +117,14 @@ void NumericComparison::print(std::ostream &stream) const {
     stream << " " << lhs;
     stream << " " << rhs;
     stream << " )";
+}
+
+bool NumericComparison::validate(
+    std::unordered_map<std::string,TypedName> const &constants,
+    std::unordered_map<std::string,size_t> const &action_parameters,
+    std::string const &action_name) const {
+    return lhs->validate(constants, action_parameters, action_name)
+        && rhs->validate(constants, action_parameters, action_name);
 }
 
 } // namespace pddl_parser

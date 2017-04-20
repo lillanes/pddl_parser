@@ -17,26 +17,32 @@ Domain::Domain(std::string &&name,
     : name(std::move(name)),
       requirements(std::make_move_iterator(requirements.begin()),
                    std::make_move_iterator(requirements.end())) {
+    requirements.clear();
     for (TypedName &type : types) {
         std::string key(type.get_name());
         this->types[key] = std::move(type);
     }
+    types.clear();
     for (TypedName &constant : constants) {
         std::string key(constant.get_name());
         this->constants[key] = std::move(constant);
     }
+    constants.clear();
     for (Predicate &predicate : predicates) {
         std::string key(predicate.get_name());
         this->predicates[key] = std::move(predicate);
     }
+    predicates.clear();
     for (Function &function : functions) {
         std::string key(function.get_name());
         this->functions[key] = std::move(function);
     }
+    functions.clear();
     for (Action &action : actions) {
         std::string key(action.get_name());
         this->actions[key] = std::move(action);
     }
+    actions.clear();
 }
 
 Predicate const& Domain::get_predicate(std::string &name) const {
@@ -92,6 +98,38 @@ void Domain::set_functions(std::deque<Function> &&functions) {
 void Domain::add_action( pddl_parser::Action &&action ) {
     std::string key(action.get_name());
     this->actions[key] = std::move(action);
+}
+
+bool Domain::validate() const {
+    bool valid = true;
+
+    if (!types.empty() && !requirements.count(":typing")) {
+        std::cerr << "ERROR: "
+                  << "Using types but no \":typing\" in requirements."
+                  << std::endl;
+        valid = false;
+    }
+
+    if (!functions.empty() && !requirements.count(":fluents")) {
+        std::cerr << "ERROR: "
+                  << "Using functions but no \":fluents\" in requirements."
+                  << std::endl;
+        valid = false;
+    }
+
+    for (auto const &pair : predicates) {
+        valid = pair.second.validate(types) && valid;
+    }
+
+    for (auto const &pair : functions) {
+        valid = pair.second.validate(types) && valid;
+    }
+
+    for (auto const &pair : actions) {
+        valid = pair.second.validate(types, constants) && valid;
+    }
+
+    return valid;
 }
 
 std::ostream& operator<<(std::ostream &stream, Domain const &domain) {

@@ -9,6 +9,19 @@ Function::Function(std::string &&name, std::deque<TypedName> &&variables)
       variables(std::move(variables)) {
 }
 
+bool Function::validate(
+    std::unordered_map<std::string, TypedName> const &types) const {
+    bool valid = true;
+    for (TypedName const &variable : variables) {
+        if (!variable.validate(types)) {
+            std::cerr << "(in definition of function " << name << ")"
+                      << std::endl;
+            valid = false;
+        }
+    }
+    return valid;
+}
+
 std::ostream& operator<<(std::ostream &stream, Function const &function) {
     function.print(stream);
     return stream;

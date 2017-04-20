@@ -282,9 +282,9 @@ action_def:
         action_def_body ")"
     {
         domain.add_action(Action(std::move($3),
-                                       std::move($6),
-                                       std::move($8.first),
-                                       std::move($8.second)));
+                                 std::move($6),
+                                 std::move($8.first),
+                                 std::move($8.second)));
     }
     ;
 

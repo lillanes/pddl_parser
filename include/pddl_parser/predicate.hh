@@ -4,6 +4,7 @@
 #include <deque>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 #include "typed_name.hh"
 
@@ -18,6 +19,8 @@ public:
     Predicate(std::string &&name, std::deque<TypedName> &&variables);
 
     std::string const & get_name() const { return name; }
+
+    bool validate(std::unordered_map<std::string,TypedName> const &types) const;
 
     friend std::ostream& operator<<(std::ostream &stream,
                                     Predicate const &predicate);

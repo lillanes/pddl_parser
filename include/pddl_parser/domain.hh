@@ -49,6 +49,8 @@ public:
 
     void add_action(Action &&action);
 
+    bool validate() const;
+
     std::string &get_name() { return name; }
 
     friend std::ostream& operator<<(std::ostream &stream, Domain const &domain);

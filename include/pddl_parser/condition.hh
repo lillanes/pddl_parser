@@ -5,8 +5,10 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 #include "numeric_expression.hh"
+#include "typed_name.hh"
 
 namespace pddl_parser {
 
@@ -16,6 +18,10 @@ protected:
     virtual ConditionBase * clone() const = 0;
     virtual void print(std::ostream &stream) const = 0;
 public:
+    virtual bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &action_parameters,
+        std::string const &action_name) const = 0;
     friend std::ostream& operator<<(std::ostream &stream,
                                     ConditionBase const &condition);
 };
@@ -30,6 +36,11 @@ class Conjunction : public ConditionBase {
 
 public:
     Conjunction(std::deque<Condition> &&conjuncts);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &parameters,
+        std::string const &action_name) const;
 };
 
 class Literal : public ConditionBase {
@@ -44,6 +55,11 @@ public:
     Literal(std::string &&predicate_name,
             std::deque<std::string> &&parameters,
             bool negated=false);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &parameters,
+        std::string const &action_name) const;
 };
 
 enum Comparator {
@@ -66,6 +82,11 @@ public:
     NumericComparison(Comparator comparator,
                       NumericExpression &&lhs,
                       NumericExpression &&rhs);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &parameters,
+        std::string const &action_name) const;
 };
 
 } // namespace pddl_parser

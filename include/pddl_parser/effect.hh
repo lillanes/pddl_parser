@@ -5,8 +5,10 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 #include "numeric_expression.hh"
+#include "typed_name.hh"
 
 namespace pddl_parser {
 
@@ -16,7 +18,12 @@ protected:
     virtual EffectBase * clone() const = 0;
     virtual void print(std::ostream &stream) const = 0;
 public:
-    friend std::ostream& operator<<(std::ostream &stream, EffectBase const &effect);
+    virtual bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &action_parameters,
+        std::string const &action_name) const = 0;
+    friend std::ostream& operator<<(std::ostream &stream,
+                                    EffectBase const &effect);
 };
 
 typedef CopyableUniquePtr<EffectBase> Effect;
@@ -31,6 +38,11 @@ class AddEffect : public EffectBase {
 public:
     AddEffect(std::string &&predicate_name,
               std::deque<std::string> &&parameters);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &action_parameters,
+        std::string const &action_name) const;
 };
 
 class DeleteEffect : public EffectBase {
@@ -43,6 +55,11 @@ class DeleteEffect : public EffectBase {
 public:
     DeleteEffect(std::string &&predicate_name,
                  std::deque<std::string> &&parameters);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &action_parameters,
+        std::string const &action_name) const;
 };
 
 enum AssignmentOperator {
@@ -67,6 +84,11 @@ public:
                   std::string &&function_name,
                   std::deque<std::string> &&parameters,
                   NumericExpression &&expression);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &action_parameters,
+        std::string const &action_name) const;
 };
 
 } // namespace pddl_parser

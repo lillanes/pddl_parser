@@ -2,7 +2,8 @@
 
 namespace pddl_parser {
 
-GroundAtom::GroundAtom(std::string &&base_name, std::deque<std::string> &&parameters)
+GroundAtom::GroundAtom(std::string &&base_name,
+                       std::deque<std::string> &&parameters)
     : base_name(std::move(base_name)),
       parameters(std::move(parameters)) {
 }

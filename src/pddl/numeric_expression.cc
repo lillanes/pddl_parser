@@ -22,6 +22,13 @@ void Number::print(std::ostream &stream) const {
     stream << value;
 }
 
+bool Number::validate(
+    std::unordered_map<std::string,TypedName> const & /*constants*/,
+    std::unordered_map<std::string,size_t> const & /*parameters*/,
+    std::string const & /*action_name*/) const {
+    return true;
+}
+
 AtomicExpression::AtomicExpression(std::string &&function_name,
                                    std::deque<std::string> &&parameters)
     : function_name(std::move(function_name)),
@@ -39,6 +46,23 @@ void AtomicExpression::print(std::ostream &stream) const {
         stream << p << " ";
     }
     stream << ")";
+}
+
+bool AtomicExpression::validate(
+    std::unordered_map<std::string,TypedName> const & constants,
+    std::unordered_map<std::string,size_t> const & action_parameters,
+    std::string const &action_name) const {
+    bool valid = true;
+    for (std::string const &parameter : parameters) {
+        if (!action_parameters.count(parameter)
+            && !constants.count(parameter)) {
+            std::cerr << "ERROR: unknown parameter \"" << parameter << "\""
+                      << " in numeric expression in action \""
+                      << action_name << "\"" << std::endl;
+            valid = false;
+        }
+    }
+    return valid;
 }
 
 BinaryExpression::BinaryExpression(BinaryOperator binary_operator,
@@ -74,6 +98,14 @@ void BinaryExpression::print(std::ostream &stream) const {
     stream << " )";
 }
 
+bool BinaryExpression::validate(
+    std::unordered_map<std::string,TypedName> const & constants,
+    std::unordered_map<std::string,size_t> const & action_parameters,
+    std::string const &action_name) const {
+    return lhs->validate(constants, action_parameters, action_name)
+        && rhs->validate(constants, action_parameters, action_name);
+}
+
 InverseExpression::InverseExpression(NumericExpression &&expression)
     : expression(std::move(expression)) {
 }
@@ -84,6 +116,13 @@ NumericExpressionBase * InverseExpression::clone() const {
 
 void InverseExpression::print(std::ostream &stream) const {
     stream << "( - " << expression << " )";
+}
+
+bool InverseExpression::validate(
+    std::unordered_map<std::string,TypedName> const & constants,
+    std::unordered_map<std::string,size_t> const & action_parameters,
+    std::string const &action_name) const {
+    return expression->validate(constants, action_parameters, action_name);
 }
 
 } // namespace pddl_parser
