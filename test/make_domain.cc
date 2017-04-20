@@ -139,8 +139,16 @@ int main(int, char **argv) {
     std::stringstream golden;
     golden << golden_file.rdbuf();
 
-    if (output.str() == golden.str()) {
+    std::string output_str = output.str();
+    std::string golden_str = golden.str();
+
+    if (output_str == golden_str) {
         return EXIT_SUCCESS;
     }
+    std::cout << "Read:" << std::endl;
+    std::cout << output_str;
+    std::cout << "Expected:" << std::endl;
+    std::cout << golden_str;
+
     return EXIT_FAILURE;
 }
