@@ -18,34 +18,25 @@ class Instance {
     friend class Parser;
 
     std::string name;
-    Domain &domain;
+    std::string domain_name;
     std::deque<std::string> requirements;
     std::unordered_map<std::string, TypedName> objects;
     State init;
     Condition goal;
 
-    Predicate const& get_predicate(std::string &name) const;
-    Function const& get_function(std::string &name) const;
-    TypedName const& get_object(std::string &name) const;
-
-    GroundPredicate ground_predicate(std::string &name,
-                                     std::deque<std::string> &parameters) const;
-    GroundFunction ground_function(std::string &name,
-                                   std::deque<std::string> &parameters,
-                                   double value) const;
-
     void set_name(std::string &&name);
+    void set_domain_name(std::string &&name);
     void set_requirements(std::deque<std::string> &&requirements);
     void set_objects(std::deque<TypedName> &&objects);
-    void add_init_predicate(std::string &name,
-                            std::deque<std::string> &parameters);
-    void add_init_function(std::string &name,
-                           std::deque<std::string> &parameters,
+    void add_init_predicate(std::string &&name,
+                            std::deque<std::string> &&parameters);
+    void add_init_function(std::string &&name,
+                           std::deque<std::string> &&parameters,
                            double value);
     void set_goal(Condition &&goal);
 
 public:
-    Instance(Domain &domain);
+    Instance() = default;
 
     friend std::ostream& operator<<(std::ostream &stream,
                                     Instance const &instance);

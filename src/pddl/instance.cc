@@ -5,12 +5,12 @@
 
 namespace pddl_parser {
 
-Instance::Instance(Domain &domain)
-    : domain(domain) {
-}
-
 void Instance::set_name(std::string &&name) {
     this->name = std::move(name);
+}
+
+void Instance::set_domain_name(std::string &&domain_name) {
+    this->domain_name = std::move(domain_name);
 }
 
 void Instance::set_requirements(std::deque<std::string> &&requirements) {
@@ -24,67 +24,25 @@ void Instance::set_objects(std::deque<TypedName> &&objects) {
     }
 }
 
-void Instance::add_init_predicate(std::string &name,
-                                  std::deque<std::string> &parameters) {
-    init.add_predicate(ground_predicate(name, parameters));
+void Instance::add_init_predicate(std::string &&name,
+                                  std::deque<std::string> &&parameters) {
+    init.add_predicate(std::move(name), std::move(parameters));
 }
 
-void Instance::add_init_function(std::string &name,
-                                 std::deque<std::string> &parameters,
+void Instance::add_init_function(std::string &&name,
+                                 std::deque<std::string> &&parameters,
                                  double value) {
-    init.add_function(ground_function(name, parameters, value));
+    init.add_function(std::move(name), std::move(parameters), value);
 }
 
 void Instance::set_goal(Condition &&goal) {
     this->goal = std::move(goal);
 }
 
-Predicate const& Instance::get_predicate(std::string &name) const {
-    return domain.get_predicate(name);
-}
-
-Function const& Instance::get_function(std::string &name) const {
-    return domain.get_function(name);
-}
-
-TypedName const& Instance::get_object(std::string &name) const {
-    auto object = objects.find(name);
-    if (object != objects.end()) {
-        return object->second;
-    }
-    else {
-        return domain.get_constant(name);
-    }
-}
-
-GroundPredicate Instance::ground_predicate(
-    std::string &name,
-    std::deque<std::string> &parameters) const {
-    std::deque<std::reference_wrapper<TypedName const>> parameters_by_ref;
-    for (auto &p : parameters) {
-        parameters_by_ref.emplace_back(get_object(p));
-    }
-    return GroundPredicate(get_predicate(name),
-                           std::move(parameters_by_ref));
-}
-
-GroundFunction Instance::ground_function(
-    std::string &name,
-    std::deque<std::string> &parameters,
-    double value) const {
-    std::deque<std::reference_wrapper<TypedName const>> parameters_by_ref;
-    for (auto &p : parameters) {
-        parameters_by_ref.emplace_back(get_object(p));
-    }
-    return GroundFunction(get_function(name),
-                          std::move(parameters_by_ref),
-                          value);
-}
-
 std::ostream& operator<<(std::ostream &stream, Instance const &instance) {
     stream << "( define ( problem " << instance.name << " )" << std::endl;
 
-    stream << "  ( :domain " << instance.domain.get_name() << " )" << std::endl;
+    stream << "  ( :domain " << instance.domain_name << " )" << std::endl;
 
     if (!instance.requirements.empty()) {
         stream << "  ( :requirements ";

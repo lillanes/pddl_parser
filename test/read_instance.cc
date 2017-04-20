@@ -11,7 +11,7 @@ using namespace pddl_parser;
 int main(int, char **argv) {
 
     Domain domain = parse_domain(argv[1]);
-    Instance instance = parse_instance(domain, argv[2]);
+    Instance instance = parse_instance(argv[2]);
 
     // Golden file test:
 

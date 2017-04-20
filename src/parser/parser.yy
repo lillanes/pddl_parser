@@ -190,6 +190,7 @@ problem:
     "(" ":domain" NAME ")"
     {
         instance.set_name(std::move($5));
+        instance.set_domain_name(std::move($9));
     }
     problem_parts ")"
 ;
@@ -503,11 +504,13 @@ init: "(" ":init" init_el_star ")"
 init_el:
     "(" NAME term_star ")"
     {
-        instance.add_init_predicate($2, $3);
+        instance.add_init_predicate(std::move($2), std::move($3));
     }
   | "(" "=" f_head NUMBER ")"
     {
-        instance.add_init_function($3.first, $3.second, $4);
+        instance.add_init_function(std::move($3.first),
+                                   std::move($3.second),
+                                   $4);
     }
   ;
 

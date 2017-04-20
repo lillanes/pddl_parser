@@ -12,24 +12,22 @@
 
 namespace pddl_parser {
 
-class GroundPredicate {
-    Predicate const &predicate;
-    std::deque<std::reference_wrapper<TypedName const>> parameters;
+class GroundAtom {
+protected:
+    std::string base_name;
+    std::deque<std::string> parameters;
 public:
-    GroundPredicate(Predicate const &predicate,
-                    std::deque<std::reference_wrapper<TypedName const>> &&parameters);
+    GroundAtom(std::string &&base_name, std::deque<std::string> &&parameters);
 
     friend std::ostream& operator<<(std::ostream &stream,
-                                    GroundPredicate const &gp);
+                                    GroundAtom const &gp);
 };
 
-class GroundFunction {
-    Function const &function;
-    std::deque<std::reference_wrapper<TypedName const>> parameters;
+class GroundFunction : public GroundAtom {
     double value;
 public:
-    GroundFunction(Function const &function,
-                   std::deque<std::reference_wrapper<TypedName const>> &&parameters,
+    GroundFunction(std::string &&base_name,
+                   std::deque<std::string> &&parameters,
                    double value);
 
     friend std::ostream& operator<<(std::ostream &stream,
@@ -37,16 +35,17 @@ public:
 };
 
 class State {
-    std::deque<GroundPredicate> propositional_state;
+    std::deque<GroundAtom> propositional_state;
     std::deque<GroundFunction> numeric_state;
 
 public:
     State() = default;
-    State(std::deque<GroundPredicate> &&propositional_state,
+    State(std::deque<GroundAtom> &&propositional_state,
           std::deque<GroundFunction> &&numeric_state);
 
-    void add_predicate(GroundPredicate &&gp);
-    void add_function(GroundFunction &&gf);
+    void add_predicate(std::string &&name, std::deque<std::string> &&parameters);
+    void add_function(std::string &&name, std::deque<std::string> &&parameters,
+                      double value);
 
     friend std::ostream& operator<<(std::ostream &stream, State const &state);
 };

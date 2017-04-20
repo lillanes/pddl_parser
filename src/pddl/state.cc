@@ -2,54 +2,56 @@
 
 namespace pddl_parser {
 
-GroundPredicate::GroundPredicate(
-    Predicate const &predicate,
-    std::deque<std::reference_wrapper<TypedName const>> &&parameters)
-    : predicate(predicate),
+GroundAtom::GroundAtom(std::string &&base_name, std::deque<std::string> &&parameters)
+    : base_name(std::move(base_name)),
       parameters(std::move(parameters)) {
 }
 
 std::ostream& operator<<(std::ostream &stream,
-                         GroundPredicate const &gp) {
-    stream << "( " << gp.predicate.get_name() << " ";
+                         GroundAtom const &gp) {
+    stream << "( " << gp.base_name << " ";
     for (auto const &p : gp.parameters) {
-        stream << p.get().get_name() << " ";
+        stream << p << " ";
     }
     stream << ")";
     return stream;
 }
 
 GroundFunction::GroundFunction(
-    Function const &function,
-    std::deque<std::reference_wrapper<TypedName const>> &&parameters,
+    std::string &&base_name,
+    std::deque<std::string> &&parameters,
     double value)
-    : function(function),
-      parameters(std::move(parameters)),
+    : GroundAtom(std::move(base_name), std::move(parameters)),
       value(value) {
 }
 
 std::ostream& operator<<(std::ostream &stream,
                          GroundFunction const &gf) {
-    stream << "( = ( " << gf.function.get_name() << " ";
+    stream << "( = ( " << gf.base_name << " ";
     for (auto const &p : gf.parameters) {
-        stream << p.get().get_name() << " ";
+        stream << p << " ";
     }
     stream << ") " << gf.value << " )";
     return stream;
 }
 
-State::State(std::deque<GroundPredicate> &&propositional_state,
+State::State(std::deque<GroundAtom> &&propositional_state,
              std::deque<GroundFunction> &&numeric_state)
     : propositional_state(std::move(propositional_state)),
       numeric_state(std::move(numeric_state)) {
 }
 
-void State::add_predicate(GroundPredicate &&gp) {
-    propositional_state.emplace_back(std::move(gp));
+void State::add_predicate(std::string &&name,
+                          std::deque<std::string> &&parameters) {
+    propositional_state.emplace_back(std::move(name), std::move(parameters));
 }
 
-void State::add_function(GroundFunction &&gf) {
-    numeric_state.emplace_back(std::move(gf));
+void State::add_function(std::string &&name,
+                         std::deque<std::string> &&parameters,
+                         double value) {
+    numeric_state.emplace_back(std::move(name),
+                               std::move(parameters),
+                               value);
 }
 
 std::ostream& operator<<(std::ostream &stream, State const &state) {
