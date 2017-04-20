@@ -41,6 +41,22 @@ bool Action::validate(
     return valid;
 }
 
+std::string const & Action::get_name() const {
+    return name;
+}
+
+std::deque<TypedName> const & Action::get_parameters() const {
+    return parameters;
+}
+
+Condition const & Action::get_condition() const {
+    return condition;
+}
+
+std::deque<Effect> const & Action::get_effects() const {
+    return effects;
+}
+
 std::ostream& operator<<(std::ostream &stream, Action const &action) {
     stream << "  ( :action " << action.name << std::endl;
     stream << "    :parameters ( ";

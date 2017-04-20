@@ -18,6 +18,7 @@ class Domain {
     friend class Parser;
     friend class Instance;
     friend class ObjectFetcher;
+    friend class TypeChecker;
 
     std::string name;
     std::unordered_set<std::string> requirements;
@@ -52,7 +53,10 @@ public:
 
     bool validate() const;
 
-    std::string &get_name() { return name; }
+    std::string const & get_name() const;
+    std::unordered_map<std::string,Predicate> const & get_predicates() const;
+    std::unordered_map<std::string,Function> const & get_functions() const;
+    std::unordered_map<std::string,Action> const & get_actions() const;
 
     friend std::ostream& operator<<(std::ostream &stream, Domain const &domain);
 

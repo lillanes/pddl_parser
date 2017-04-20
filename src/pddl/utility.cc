@@ -16,4 +16,17 @@ TypedName const & ObjectFetcher::operator()(
     return it->second;
 }
 
+TypeChecker::TypeChecker(Domain const &domain)
+    : domain(domain) {
+}
+
+bool TypeChecker::operator()(std::string const &type_name,
+                             std::string const &target_type) const {
+    if (type_name == target_type) {
+        return true;
+    }
+    return this->operator()(domain.types.at(type_name).get_type_name(),
+                            target_type);
+}
+
 } // namespace pddl_parser

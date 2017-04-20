@@ -43,6 +43,22 @@ void Instance::set_goal(Condition &&goal) {
     this->goal = std::move(goal);
 }
 
+std::string const & Instance::get_name() const {
+    return name;
+}
+
+std::string const & Instance::get_domain_name() const {
+    return domain_name;
+}
+
+State const & Instance::get_init() const {
+    return init;
+}
+
+Condition const & Instance::get_goal() const {
+    return goal;
+}
+
 std::ostream& operator<<(std::ostream &stream, Instance const &instance) {
     stream << "( define ( problem " << instance.name << " )" << std::endl;
 

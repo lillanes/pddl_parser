@@ -18,7 +18,8 @@ public:
     Predicate() = default;
     Predicate(std::string &&name, std::deque<TypedName> &&variables);
 
-    std::string const & get_name() const { return name; }
+    std::string const & get_name() const;
+    std::deque<TypedName> const & get_variables() const;
 
     bool validate(std::unordered_map<std::string,TypedName> const &types) const;
 

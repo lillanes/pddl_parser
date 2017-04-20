@@ -8,6 +8,14 @@ GroundAtom::GroundAtom(std::string &&base_name,
       parameters(std::move(parameters)) {
 }
 
+std::string const & GroundAtom::get_base_name() const {
+    return base_name;
+}
+
+std::deque<std::string> const & GroundAtom::get_parameters() const {
+    return parameters;
+}
+
 std::ostream& operator<<(std::ostream &stream,
                          GroundAtom const &gp) {
     stream << "( " << gp.base_name << " ";
@@ -24,6 +32,10 @@ GroundFunction::GroundFunction(
     double value)
     : GroundAtom(std::move(base_name), std::move(parameters)),
       value(value) {
+}
+
+double const & GroundFunction::get_value() const {
+    return value;
 }
 
 std::ostream& operator<<(std::ostream &stream,
@@ -53,6 +65,14 @@ void State::add_function(std::string &&name,
     numeric_state.emplace_back(std::move(name),
                                std::move(parameters),
                                value);
+}
+
+std::deque<GroundAtom> const & State::get_propositional_state() const {
+    return propositional_state;
+}
+
+std::deque<GroundFunction> const & State::get_numeric_state() const {
+    return numeric_state;
 }
 
 std::ostream& operator<<(std::ostream &stream, State const &state) {

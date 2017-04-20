@@ -15,6 +15,14 @@ public:
     TypedName const & operator()(std::string const &object_name) const;
 };
 
+class TypeChecker {
+    Domain const &domain;
+public:
+    TypeChecker(Domain const &domain);
+    bool operator()(std::string const &type_name,
+                    std::string const &target_type) const;
+};
+
 } // namespace pddl_parser
 
 #endif // PDDL_PARSER_UTILITY_HH

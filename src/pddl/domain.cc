@@ -132,6 +132,22 @@ bool Domain::validate() const {
     return valid;
 }
 
+std::string const & Domain::get_name() const {
+    return name;
+}
+
+std::unordered_map<std::string,Predicate> const & Domain::get_predicates() const {
+    return predicates;
+}
+
+std::unordered_map<std::string,Function> const & Domain::get_functions() const {
+    return functions;
+}
+
+std::unordered_map<std::string,Action> const & Domain::get_actions() const {
+    return actions;
+}
+
 std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     stream << "( define ( domain " << domain.name << " )" << std::endl;
 

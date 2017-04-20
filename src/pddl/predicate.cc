@@ -22,6 +22,14 @@ bool Predicate::validate(
     return valid;
 }
 
+std::string const & Predicate::get_name() const {
+    return name;
+}
+
+std::deque<TypedName> const & Predicate::get_variables() const {
+    return variables;
+}
+
 std::ostream& operator<<(std::ostream &stream, Predicate const &predicate) {
     stream << "( " << predicate.name << " ";
     for (auto const &tn : predicate.variables) {

@@ -27,7 +27,10 @@ public:
            Condition &&condition,
            std::deque<Effect> &&effects);
 
-    std::string const & get_name() const { return name; }
+    std::string const & get_name() const;
+    std::deque<TypedName> const & get_parameters() const;
+    Condition const & get_condition() const;
+    std::deque<Effect> const & get_effects() const;
 
     bool validate(
         std::unordered_map<std::string,TypedName> const &types,

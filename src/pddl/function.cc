@@ -22,17 +22,21 @@ bool Function::validate(
     return valid;
 }
 
-std::ostream& operator<<(std::ostream &stream, Function const &function) {
-    function.print(stream);
-    return stream;
+std::string const & Function::get_name() const {
+    return name;
 }
 
-void Function::print(std::ostream &stream) const {
-    stream << "( " << name << " ";
-    for (auto const &v : variables) {
+std::deque<TypedName> const & Function::get_variables() const {
+    return variables;
+}
+
+std::ostream& operator<<(std::ostream &stream, Function const &function) {
+    stream << "( " << function.name << " ";
+    for (auto const &v : function.variables) {
         stream << v << " ";
     }
     stream << ")";
+    return stream;
 }
 
 } // namespace pddl_parser
