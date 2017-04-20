@@ -4,6 +4,7 @@
 #include <deque>
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 
 #include "domain.hh"
@@ -19,7 +20,7 @@ class Instance {
 
     std::string name;
     std::string domain_name;
-    std::deque<std::string> requirements;
+    std::unordered_set<std::string> requirements;
     std::unordered_map<std::string, TypedName> objects;
     State init;
     Condition goal;

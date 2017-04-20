@@ -1,5 +1,5 @@
 ( define ( domain trucky )
-  ( :requirements :typing :fluents )
+  ( :requirements :fluents :typing )
   ( :types
     box - locatable
     locatable - object

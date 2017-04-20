@@ -1,4 +1,6 @@
+#include <iterator>
 #include <map>
+#include <set>
 #include <utility>
 
 #include "instance.hh"
@@ -14,7 +16,9 @@ void Instance::set_domain_name(std::string &&domain_name) {
 }
 
 void Instance::set_requirements(std::deque<std::string> &&requirements) {
-    this->requirements = std::move(requirements);
+    this->requirements = std::unordered_set<std::string>(
+        std::make_move_iterator(requirements.begin()),
+        std::make_move_iterator(requirements.end()));
 }
 
 void Instance::set_objects(std::deque<TypedName> &&objects) {
@@ -46,7 +50,10 @@ std::ostream& operator<<(std::ostream &stream, Instance const &instance) {
 
     if (!instance.requirements.empty()) {
         stream << "  ( :requirements ";
-        for (auto const &r : instance.requirements) {
+        std::set<std::string> ordered_requirements(
+            instance.requirements.begin(),
+            instance.requirements.end());
+        for (auto const &r : ordered_requirements) {
             stream << r << " ";
         }
         stream << ")" << std::endl;

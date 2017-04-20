@@ -4,6 +4,7 @@
 #include <deque>
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 
 #include "action.hh"
@@ -18,7 +19,7 @@ class Domain {
     friend class Instance;
 
     std::string name;
-    std::deque<std::string> requirements;
+    std::unordered_set<std::string> requirements;
     std::unordered_map<std::string,TypedName> types;
     std::unordered_map<std::string,TypedName> constants;
     std::unordered_map<std::string,Predicate> predicates;

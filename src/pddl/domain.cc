@@ -1,4 +1,6 @@
+#include <iterator>
 #include <map>
+#include <set>
 #include <utility>
 
 #include "domain.hh"
@@ -13,7 +15,8 @@ Domain::Domain(std::string &&name,
                std::deque<Function> &&functions,
                std::deque<Action> &&actions)
     : name(std::move(name)),
-      requirements(std::move(requirements)) {
+      requirements(std::make_move_iterator(requirements.begin()),
+                   std::make_move_iterator(requirements.end())) {
     for (TypedName &type : types) {
         std::string key(type.get_name());
         this->types[key] = std::move(type);
@@ -53,7 +56,9 @@ void Domain::set_name(std::string &&name) {
 }
 
 void Domain::set_requirements(std::deque<std::string> &&requirements) {
-    this->requirements = std::move(requirements);
+    this->requirements = std::unordered_set<std::string>(
+        std::make_move_iterator(requirements.begin()),
+        std::make_move_iterator(requirements.end()));
 }
 
 void Domain::set_types(std::deque<TypedName> &&types) {
@@ -94,7 +99,10 @@ std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
 
     if (!domain.requirements.empty()) {
         stream << "  ( :requirements ";
-        for (auto const &r : domain.requirements) {
+        std::set<std::string> ordered_requirements(
+            domain.requirements.begin(),
+            domain.requirements.end());
+        for (auto const &r : ordered_requirements) {
             stream << r << " ";
         }
         stream << ")" << std::endl;
