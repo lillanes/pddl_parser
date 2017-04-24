@@ -42,7 +42,7 @@ class Domain {
     TypedName const& get_constant(std::string &name) const;
 
 public:
-    Domain() = default;
+    Domain();
     Domain(std::string &&name,
            std::deque<std::string> &&requirements,
            std::deque<TypedName> &&types,

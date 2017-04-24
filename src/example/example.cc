@@ -10,7 +10,6 @@
 using namespace pddl_parser;
 
 struct Timer {
-    struct timespec start_wall, finish_wall, start_cpu, finish_cpu;
     std::chrono::steady_clock::time_point start_time, end_time;
 
     void start() {

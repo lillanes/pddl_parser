@@ -19,6 +19,7 @@
 #define YY_USER_ACTION increment_location(yyleng);
 %}
 
+%option caseless
 %option nodefault
 %option noyywrap
 %option c++
@@ -106,10 +107,20 @@
 "imply" { return pddl_parser::Parser::make_IMPLY(location); }
 
 ":"?[a-zA-Z][a-zA-Z0-9\-_]* {
+    int index = 0;
+    while(yytext[index] != 0) {
+        yytext[index] = tolower(yytext[index]);
+        ++index;
+    }
     return pddl_parser::Parser::make_NAME(yytext, location);
 }
 
 "?"[a-zA-Z][a-zA-Z0-9\-_\[\]]* {
+    int index = 0;
+    while(yytext[index] != 0) {
+        yytext[index] = tolower(yytext[index]);
+        ++index;
+    }
     return pddl_parser::Parser::make_VARIABLE(yytext, location);
 }
 

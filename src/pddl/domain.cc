@@ -7,6 +7,10 @@
 
 namespace pddl_parser {
 
+Domain::Domain() {
+    types["object"] = TypedName("object");
+}
+
 Domain::Domain(std::string &&name,
                std::deque<std::string> &&requirements,
                std::deque<TypedName> &&types,
@@ -103,7 +107,7 @@ void Domain::add_action( pddl_parser::Action &&action ) {
 bool Domain::validate() const {
     bool valid = true;
 
-    if (!types.empty() && !requirements.count(":typing")) {
+    if (types.size() > 1 && !requirements.count(":typing")) {
         std::cerr << "ERROR: "
                   << "Using types but no \":typing\" in requirements."
                   << std::endl;
