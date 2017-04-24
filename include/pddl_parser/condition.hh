@@ -12,6 +12,20 @@
 
 namespace pddl_parser {
 
+struct CanonicalCondition {
+    size_t size;
+    std::deque<std::string> predicate_names;
+    std::deque<std::deque<std::string>> parameters;
+    std::deque<bool> negations;
+
+    CanonicalCondition();
+    CanonicalCondition(size_t size,
+                       std::deque<std::string> predicate_names,
+                       std::deque<std::deque<std::string>> parameters,
+                       std::deque<bool> negations);
+    void join_with(CanonicalCondition &&other);
+};
+
 class ConditionBase {
     friend class CopyableUniquePtr<ConditionBase>;
 protected:
@@ -22,6 +36,7 @@ public:
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const = 0;
+    virtual CanonicalCondition canonicalize() const = 0;
     friend std::ostream& operator<<(std::ostream &stream,
                                     ConditionBase const &condition);
 };
@@ -41,6 +56,7 @@ public:
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
+    CanonicalCondition canonicalize() const;
 };
 
 class Literal : public ConditionBase {
@@ -60,6 +76,7 @@ public:
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
+    CanonicalCondition canonicalize() const;
 };
 
 enum Comparator {
@@ -87,6 +104,7 @@ public:
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
+    CanonicalCondition canonicalize() const;
 };
 
 } // namespace pddl_parser

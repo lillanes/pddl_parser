@@ -23,6 +23,15 @@ public:
                     std::string const &target_type) const;
 };
 
+class TypeMembersFetcher {
+    Domain const &domain;
+    Instance const &instance;
+    TypeChecker type_checker;
+public:
+    TypeMembersFetcher(Domain const &domain, Instance const &instance);
+    std::deque<std::string> operator()(std::string const &type_name) const;
+};
+
 } // namespace pddl_parser
 
 #endif // PDDL_PARSER_UTILITY_HH
