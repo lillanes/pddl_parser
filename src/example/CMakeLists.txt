@@ -1,4 +1,5 @@
-file(GLOB sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc")
+set(sources
+  "${CMAKE_CURRENT_SOURCE_DIR}/example.cc")
 
 add_executable(
   pddl_parser_example

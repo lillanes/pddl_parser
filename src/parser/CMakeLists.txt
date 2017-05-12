@@ -20,7 +20,8 @@ set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
 
 flex_target(PDDLScanner scanner.ll ${CMAKE_CURRENT_BINARY_DIR}/scanner.flex.cc)
 
-file(GLOB sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc")
+set(sources
+  "${CMAKE_CURRENT_SOURCE_DIR}/parse.cc")
 
 set_source_files_properties(${BISON_GENERATED_SOURCES} ${BISON_GENERATED_HEADERS} GENERATED)
 
