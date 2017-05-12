@@ -1,4 +1,3 @@
-#include <cassert>
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
@@ -21,10 +20,18 @@ int main(int, char **argv) {
     TypedName const &t01 = fetcher("t01");
     TypedName const &depot = fetcher("depot");
 
-    assert(t01.get_name() == "t01");
-    assert(t01.get_type_name() == "truck");
-    assert(depot.get_name() == "depot");
-    assert(depot.get_type_name() == "location");
+    if(t01.get_name() != "t01") {
+        return EXIT_FAILURE;
+    }
+    if(t01.get_type_name() != "truck") {
+        return EXIT_FAILURE;
+    }
+    if(depot.get_name() != "depot") {
+        return EXIT_FAILURE;
+    }
+    if(depot.get_type_name() != "location") {
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
