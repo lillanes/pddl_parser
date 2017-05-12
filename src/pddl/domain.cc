@@ -170,7 +170,9 @@ std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     std::map<std::string,TypedName> ordered_types(domain.types.begin(),
                                                   domain.types.end());
     for (auto const &t : ordered_types) {
-        stream << std::endl << "    " << t.second;
+        if (t.second.get_name() != "object") {
+            stream << std::endl << "    " << t.second;
+        }
     }
     stream << " )" << std::endl;
 
