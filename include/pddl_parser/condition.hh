@@ -7,24 +7,11 @@
 #include <string>
 #include <unordered_map>
 
+#include "canonicalization.hh"
 #include "numeric_expression.hh"
 #include "typed_name.hh"
 
 namespace pddl_parser {
-
-struct CanonicalCondition {
-    size_t size;
-    std::deque<std::string> predicate_names;
-    std::deque<std::deque<std::string>> parameters;
-    std::deque<bool> negations;
-
-    CanonicalCondition();
-    CanonicalCondition(size_t size,
-                       std::deque<std::string> predicate_names,
-                       std::deque<std::deque<std::string>> parameters,
-                       std::deque<bool> negations);
-    void join_with(CanonicalCondition &&other);
-};
 
 class ConditionBase {
     friend class CopyableUniquePtr<ConditionBase>;

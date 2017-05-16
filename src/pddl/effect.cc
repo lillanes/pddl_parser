@@ -45,8 +45,8 @@ bool AddEffect::validate(
     return valid;
 }
 
-CanonicalCondition AddEffect::canonicalize() const {
-    return CanonicalCondition(1, {predicate_name}, {parameters}, {false});
+CanonicalEffect AddEffect::canonicalize() const {
+    return CanonicalEffect(predicate_name, parameters, false);
 }
 
 DeleteEffect::DeleteEffect(std::string &&predicate_name,
@@ -85,8 +85,8 @@ bool DeleteEffect::validate(
     return valid;
 }
 
-CanonicalCondition DeleteEffect::canonicalize() const {
-    return CanonicalCondition(1, {predicate_name}, {parameters}, {true});
+CanonicalEffect DeleteEffect::canonicalize() const {
+    return CanonicalEffect(predicate_name, parameters, true);
 }
 
 NumericEffect::NumericEffect(AssignmentOperator assignment_operator,
@@ -150,7 +150,7 @@ bool NumericEffect::validate(
     return valid;
 }
 
-CanonicalCondition NumericEffect::canonicalize() const {
+CanonicalEffect NumericEffect::canonicalize() const {
     throw std::string("Canonicalization of numeric effects is not supported.");
 }
 

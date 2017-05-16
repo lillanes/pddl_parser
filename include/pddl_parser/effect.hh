@@ -7,6 +7,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "canonicalization.hh"
 #include "condition.hh"
 #include "numeric_expression.hh"
 #include "typed_name.hh"
@@ -23,7 +24,7 @@ public:
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const = 0;
-    virtual CanonicalCondition canonicalize() const = 0;
+    virtual CanonicalEffect canonicalize() const = 0;
     friend std::ostream& operator<<(std::ostream &stream,
                                     EffectBase const &effect);
 };
@@ -45,7 +46,7 @@ public:
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
-    CanonicalCondition canonicalize() const;
+    CanonicalEffect canonicalize() const;
 };
 
 class DeleteEffect : public EffectBase {
@@ -63,7 +64,7 @@ public:
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
-    CanonicalCondition canonicalize() const;
+    CanonicalEffect canonicalize() const;
 };
 
 enum AssignmentOperator {
@@ -88,7 +89,7 @@ public:
                   std::string &&function_name,
                   std::deque<std::string> &&parameters,
                   NumericExpression &&expression);
-    CanonicalCondition canonicalize() const;
+    CanonicalEffect canonicalize() const;
 
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,

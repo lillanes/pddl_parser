@@ -5,38 +5,6 @@
 
 namespace pddl_parser {
 
-CanonicalCondition::CanonicalCondition()
-    : size(0),
-      predicate_names(),
-      parameters(),
-      negations() {
-}
-
-CanonicalCondition::CanonicalCondition(
-    size_t size,
-    std::deque<std::string> predicate_names,
-    std::deque<std::deque<std::string>> parameters,
-    std::deque<bool> negations)
-    : size(size),
-      predicate_names(predicate_names),
-      parameters(parameters),
-      negations(negations) {
-}
-
-void CanonicalCondition::join_with(pddl_parser::CanonicalCondition &&other) {
-    size += other.size;
-    predicate_names.insert(
-        predicate_names.end(),
-        std::make_move_iterator(other.predicate_names.begin()),
-        std::make_move_iterator(other.predicate_names.end()));
-    parameters.insert(parameters.end(),
-                      std::make_move_iterator(other.parameters.begin()),
-                      std::make_move_iterator(other.parameters.end()));
-    negations.insert(negations.end(),
-                     std::make_move_iterator(other.negations.begin()),
-                     std::make_move_iterator(other.negations.end()));
-}
-
 std::ostream& operator<<(std::ostream &stream, ConditionBase const &condition) {
     condition.print(stream);
     return stream;
@@ -88,7 +56,7 @@ bool Literal::validate(
 }
 
 CanonicalCondition Literal::canonicalize() const {
-    return CanonicalCondition(1, {predicate_name}, {parameters}, {negated});
+    return CanonicalCondition(predicate_name, parameters, negated);
 }
 
 Conjunction::Conjunction(std::deque<Condition> &&conjuncts)
@@ -174,7 +142,8 @@ bool NumericComparison::validate(
 
 CanonicalCondition NumericComparison::canonicalize() const {
     throw std::string(
-        "Canonicalization of numeric comparisons is not supported.");
+        "Canonicalization of numeric comparison is not supported.");
+    // return CanonicalCondition(0, {}, {}, {}, {*this});
 }
 
 
