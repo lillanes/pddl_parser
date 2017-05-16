@@ -151,7 +151,7 @@ bool NumericEffect::validate(
 }
 
 CanonicalEffect NumericEffect::canonicalize() const {
-    throw std::string("Canonicalization of numeric effects is not supported.");
+    return CanonicalEffect(*this);
 }
 
 } // namespace pddl_parser

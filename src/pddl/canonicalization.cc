@@ -6,21 +6,15 @@
 
 namespace pddl_parser {
 
-CanonicalBase::CanonicalBase()
-    : size(0) {
-}
-
 CanonicalBase::CanonicalBase(std::string predicate_name,
                              std::deque<std::string> parameters,
                              bool negated)
-    : size(1),
-      predicate_names(1, predicate_name),
+    : predicate_names(1, predicate_name),
       parameters(1, parameters),
       negations(1, negated) {
 }
 
 void CanonicalBase::join_with(CanonicalBase &&other) {
-    size += other.size;
     predicate_names.insert(
         predicate_names.end(),
         std::make_move_iterator(other.predicate_names.begin()),
@@ -48,7 +42,14 @@ std::deque<bool> const & CanonicalBase::get_negations() const {
 CanonicalCondition::CanonicalCondition(std::string predicate_name,
                                        std::deque<std::string> parameters,
                                        bool negated)
-    : CanonicalBase(predicate_name, parameters, negated) {}
+    : CanonicalBase(predicate_name, parameters, negated) {
+}
+
+CanonicalCondition::CanonicalCondition(
+    NumericComparison const &numeric_comparison)
+    : CanonicalBase(),
+      numeric_comparisons(1, numeric_comparison) {
+}
 
 void CanonicalCondition::join_with(CanonicalCondition &&other) {
     CanonicalBase::join_with(static_cast<CanonicalBase&&>(other));
@@ -62,5 +63,10 @@ CanonicalEffect::CanonicalEffect(std::string predicate_name,
                                  std::deque<std::string> parameters,
                                  bool negated)
     : CanonicalBase(predicate_name, parameters, negated) {}
+
+CanonicalEffect::CanonicalEffect(NumericEffect const &numeric_effect)
+    : CanonicalBase(),
+      numeric_effects(1, numeric_effect) {
+}
 
 } // namespace pddl_parser

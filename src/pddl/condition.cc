@@ -141,9 +141,7 @@ bool NumericComparison::validate(
 }
 
 CanonicalCondition NumericComparison::canonicalize() const {
-    throw std::string(
-        "Canonicalization of numeric comparison is not supported.");
-    // return CanonicalCondition(0, {}, {}, {}, {*this});
+    return CanonicalCondition(*this);
 }
 
 

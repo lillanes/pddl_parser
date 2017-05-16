@@ -9,12 +9,11 @@ namespace pddl_parser {
 
 class CanonicalBase {
 protected:
-    size_t size;
     std::deque<std::string> predicate_names;
     std::deque<std::deque<std::string>> parameters;
     std::deque<bool> negations;
 
-    CanonicalBase();
+    CanonicalBase() = default;
     CanonicalBase(std::string predicate_name,
                   std::deque<std::string> parameters,
                   bool negated);
@@ -35,7 +34,7 @@ public:
     CanonicalCondition(std::string predicate_name,
                        std::deque<std::string> parameters,
                        bool negated);
-    CanonicalCondition(NumericComparison numeric_comparison);
+    CanonicalCondition(NumericComparison const &numeric_comparison);
     void join_with(CanonicalCondition &&other);
 };
 
@@ -49,7 +48,7 @@ public:
     CanonicalEffect(std::string predicate_name,
                     std::deque<std::string> parameters,
                     bool negated);
-    CanonicalEffect(NumericEffect numeric_effect);
+    CanonicalEffect(NumericEffect const &numeric_effect);
     void join_with(CanonicalEffect &&other);
 };
 
