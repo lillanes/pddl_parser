@@ -57,8 +57,9 @@ int main(int const argc, char const **argv) {
             std::cout << "Parsing took "
                       << timer.get_elapsed() << " seconds." << std::endl;
         }
-        catch (int error) {
-            return error;
+        catch (std::string error) {
+            std::cerr << "ERROR: " << error << std::endl;
+            return EXIT_FAILURE;
         }
 
         if (valid) {

@@ -705,5 +705,5 @@ init_el_star: init_el_plus | %empty;
 %%
 
 void pddl_parser::Parser::error(const location &loc , const std::string &err_message) {
-   std::cerr << "Error: " << err_message << " at " << loc << "\n";
+    std::cerr << std::endl << "ERROR: " << err_message << " at " << loc << "\n";
 }

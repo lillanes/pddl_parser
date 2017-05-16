@@ -173,7 +173,8 @@ bool NumericComparison::validate(
 }
 
 CanonicalCondition NumericComparison::canonicalize() const {
-    throw "Canonicalization of numeric comparisons is not supported.";
+    throw std::string(
+        "Canonicalization of numeric comparisons is not supported.");
 }
 
 

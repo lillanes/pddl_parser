@@ -1,4 +1,5 @@
 #include <fstream>
+#include <string>
 
 #include "parser.bison.hh"
 
@@ -13,6 +14,13 @@ Domain parse_domain(char const *domain_fn) {
     scanner.initialize_location(domain_fn);
     std::ifstream domain_stream(domain_fn);
 
+    if (!domain_stream.good()) {
+        std::string error("error reading domain file (");
+        error += domain_fn;
+        error += ")";
+        throw error;
+    }
+
     Domain domain;
     Instance instance;
 
@@ -22,7 +30,7 @@ Domain parse_domain(char const *domain_fn) {
 
     int res = parser.parse();
     if (res != 0) {
-        throw res;
+        throw std::string("failed to parse domain.");
     }
 
     return domain;
@@ -34,6 +42,14 @@ Instance parse_instance(char const *instance_fn) {
     scanner.initialize_location(instance_fn);
     std::ifstream instance_stream(instance_fn);
 
+    if (!instance_stream.good()) {
+        std::string error("error reading problem instance file (");
+        error += instance_fn;
+        error += ")";
+        throw error;
+    }
+
+
     Domain domain;
     Instance instance;
 
@@ -43,7 +59,7 @@ Instance parse_instance(char const *instance_fn) {
 
     int res = parser.parse();
     if (res != 0) {
-        throw res;
+        throw std::string("failed to parse instance.");
     }
 
     return instance;
