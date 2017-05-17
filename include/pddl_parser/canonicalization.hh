@@ -36,6 +36,7 @@ public:
                        bool negated);
     CanonicalCondition(NumericComparison const &numeric_comparison);
     void join_with(CanonicalCondition &&other);
+    std::deque<NumericComparison> const & get_numeric_comparisons() const;
 };
 
 class NumericEffect;
@@ -50,6 +51,7 @@ public:
                     bool negated);
     CanonicalEffect(NumericEffect const &numeric_effect);
     void join_with(CanonicalEffect &&other);
+    std::deque<NumericEffect> const & get_numeric_effects() const;
 };
 
 } // namespace pddl_parser

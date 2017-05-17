@@ -59,6 +59,11 @@ void CanonicalCondition::join_with(CanonicalCondition &&other) {
         std::make_move_iterator(other.numeric_comparisons.end()));
 }
 
+std::deque<NumericComparison> const &
+CanonicalCondition::get_numeric_comparisons() const {
+    return numeric_comparisons;
+}
+
 CanonicalEffect::CanonicalEffect(std::string predicate_name,
                                  std::deque<std::string> parameters,
                                  bool negated)
@@ -67,6 +72,11 @@ CanonicalEffect::CanonicalEffect(std::string predicate_name,
 CanonicalEffect::CanonicalEffect(NumericEffect const &numeric_effect)
     : CanonicalBase(),
       numeric_effects(1, numeric_effect) {
+}
+
+std::deque<NumericEffect> const &
+CanonicalEffect::get_numeric_effects() const {
+    return numeric_effects;
 }
 
 } // namespace pddl_parser
