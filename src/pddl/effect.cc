@@ -130,6 +130,22 @@ void NumericEffect::print(std::ostream &stream) const {
     stream << ") " << expression << " )";
 }
 
+AssignmentOperator NumericEffect::get_assignment_operator() const {
+    return assignment_operator;
+}
+
+std::string const & NumericEffect::get_function_name() const {
+    return function_name;
+}
+
+std::deque<std::string> const & NumericEffect::get_parameters() const {
+    return parameters;
+}
+
+NumericExpression const & NumericEffect::get_expression() const {
+    return expression;
+}
+
 bool NumericEffect::validate(
     std::unordered_map<std::string,TypedName> const &constants,
     std::unordered_map<std::string,size_t> const &action_parameters,

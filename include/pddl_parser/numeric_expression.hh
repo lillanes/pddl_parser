@@ -37,6 +37,7 @@ class Number : public NumericExpressionBase {
 public:
     Number(double value);
 
+    double get_value() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
@@ -54,6 +55,8 @@ public:
     AtomicExpression(std::string &&function_name,
                      std::deque<std::string> &&parameters);
 
+    std::string const & get_function_name() const;
+    std::deque<std::string> const & get_parameters() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
@@ -80,6 +83,9 @@ public:
                      NumericExpression &&lhs,
                      NumericExpression &&rhs);
 
+    BinaryOperator get_binary_operator() const;
+    NumericExpression const & get_lhs() const;
+    NumericExpression const & get_rhs() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
@@ -96,6 +102,7 @@ class InverseExpression : public NumericExpressionBase {
 public:
     InverseExpression(NumericExpression &&expression);
 
+    NumericExpression const &get_expression() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,

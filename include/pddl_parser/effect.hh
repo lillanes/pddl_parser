@@ -91,6 +91,11 @@ public:
                   NumericExpression &&expression);
     CanonicalEffect canonicalize() const;
 
+    AssignmentOperator get_assignment_operator() const;
+    std::string const & get_function_name() const;
+    std::deque<std::string> const & get_parameters() const;
+    NumericExpression const & get_expression() const;
+
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,

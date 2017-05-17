@@ -92,6 +92,10 @@ public:
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
     CanonicalCondition canonicalize() const;
+
+    Comparator get_comparator() const;
+    NumericExpression const & get_lhs() const;
+    NumericExpression const & get_rhs() const;
 };
 
 } // namespace pddl_parser
