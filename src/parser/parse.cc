@@ -36,6 +36,10 @@ Domain parse_domain(char const *domain_fn) {
     return domain;
 }
 
+Domain parse_domain(std::string const &domain_fn) {
+    return parse_domain(domain_fn.c_str());
+}
+
 Instance parse_instance(char const *instance_fn) {
     Scanner scanner;
 
@@ -63,6 +67,10 @@ Instance parse_instance(char const *instance_fn) {
     }
 
     return instance;
+}
+
+Instance parse_instance(std::string const &instance_fn) {
+    return parse_instance(instance_fn.c_str());
 }
 
 } // namespace pddl_parser

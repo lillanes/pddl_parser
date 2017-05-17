@@ -11,7 +11,9 @@
 namespace pddl_parser {
 
 Domain parse_domain(char const *domain_fn);
+Domain parse_domain(std::string const &domain_fn);
 Instance parse_instance(char const *instance_fn);
+Instance parse_instance(std::string const &instance_fn);
 
 } // namespace pddl_parser
 
