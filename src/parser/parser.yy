@@ -95,6 +95,9 @@
   OBJECTSKW           ":objects"
   INITKW              ":init"
   GOALKW              ":goal"
+  METRICKW            ":metric"
+  MAXIMIZE            "maximize"
+  MINIMIZE            "minimize"
   AND                 "and"
   NOT                 "not"
   L                   "<"
@@ -230,7 +233,7 @@ problem_parts:
     {
         instance.set_objects(std::move($1));
     } problem_parts
-  | init goal
+  | init goal metric
 ;
 
 require_def: "(" ":requirements" require_key_plus ")"
@@ -519,6 +522,15 @@ goal: "(" ":goal" goal_description ")"
     instance.set_goal(std::move($3));
 }
 ;
+
+metric:
+     "(" ":metric" optimization f_exp ")"
+{
+    std::cerr << "WARNING: metric is ignored." << std::endl;
+}
+  | %empty;
+
+optimization: "maximize" | "minimize";
 
 // lists:
 

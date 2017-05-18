@@ -66,6 +66,12 @@
 
 ":effect" { return pddl_parser::Parser::make_EFFECTKW(location); }
 
+":metric" { return pddl_parser::Parser::make_METRICKW(location); }
+
+"maximize" { return pddl_parser::Parser::make_MAXIMIZE(location); }
+
+"minimize" { return pddl_parser::Parser::make_MINIMIZE(location); }
+
 "and" { return pddl_parser::Parser::make_AND(location); }
 
 "not" { return pddl_parser::Parser::make_NOT(location); }
