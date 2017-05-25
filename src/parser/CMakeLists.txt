@@ -37,3 +37,8 @@ add_library(
 )
 
 target_link_libraries(pddl_parser pddl)
+
+install(
+  TARGETS pddl_parser
+  DESTINATION lib
+  )

@@ -14,3 +14,7 @@ set(sources
   )
 
 add_library(pddl STATIC ${sources})
+install(
+  TARGETS pddl
+  DESTINATION lib
+  )
