@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
-project(pddl_parser)
+cmake_minimum_required(VERSION 2.8.11)
+project(pddl_parser CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
