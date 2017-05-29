@@ -8,4 +8,4 @@ representation of a planning domain and an optional set of problem instances.
 The parser is meant to deal with a fragment of PDDL2.1. Specifically, it is
 supposed to handle the basic STRIPS fragment, augmented with types, numeric
 fluents, and negative preconditions. Types are limited to simple inheritance
-(i.e.: without `either`).
+(i.e., without `either`).
