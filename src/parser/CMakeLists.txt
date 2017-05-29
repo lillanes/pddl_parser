@@ -29,7 +29,6 @@ set_source_files_properties(
 
 add_library(
   pddl_parser
-  STATIC
   ${sources}
   ${BISON_GENERATED_SOURCES}
   ${FLEX_PDDLScanner_OUTPUTS}

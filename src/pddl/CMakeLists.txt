@@ -13,7 +13,7 @@ set(sources
   "${CMAKE_CURRENT_SOURCE_DIR}/utility.cc"
   )
 
-add_library(pddl STATIC ${sources})
+add_library(pddl ${sources})
 
 target_include_directories(pddl PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
