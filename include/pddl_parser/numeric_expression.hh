@@ -7,8 +7,8 @@
 #include <memory>
 #include <unordered_map>
 
-#include "copyable_unique_ptr.hh"
-#include "typed_name.hh"
+#include <pddl_parser/copyable_unique_ptr.hh>
+#include <pddl_parser/typed_name.hh>
 
 namespace pddl_parser {
 

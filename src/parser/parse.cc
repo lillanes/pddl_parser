@@ -1,9 +1,10 @@
 #include <fstream>
 #include <string>
 
-#include "parser.bison.hh"
+#include <pddl_parser/parse.hh>
 
-#include "parse.hh"
+#include <parser.bison.hh>
+
 #include "scanner.hh"
 
 namespace pddl_parser {

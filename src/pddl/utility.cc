@@ -1,4 +1,6 @@
-#include "utility.hh"
+#include <pddl_parser/domain.hh>
+#include <pddl_parser/instance.hh>
+#include <pddl_parser/utility.hh>
 
 namespace pddl_parser {
 

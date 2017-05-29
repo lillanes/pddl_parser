@@ -7,11 +7,12 @@
 #include <string>
 #include <unordered_map>
 
-#include "canonicalization.hh"
-#include "numeric_expression.hh"
-#include "typed_name.hh"
+#include <pddl_parser/numeric_expression.hh>
+#include <pddl_parser/typed_name.hh>
 
 namespace pddl_parser {
+
+class CanonicalCondition;
 
 class ConditionBase {
     friend class CopyableUniquePtr<ConditionBase>;

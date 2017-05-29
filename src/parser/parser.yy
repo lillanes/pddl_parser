@@ -21,16 +21,16 @@
     #include <string>
     #include <utility>
 
-    #include "action.hh"
-    #include "condition.hh"
-    #include "domain.hh"
-    #include "effect.hh"
-    #include "function.hh"
-    #include "instance.hh"
-    #include "numeric_expression.hh"
-    #include "predicate.hh"
-    #include "state.hh"
-    #include "typed_name.hh"
+    #include <pddl_parser/action.hh>
+    #include <pddl_parser/condition.hh>
+    #include <pddl_parser/domain.hh>
+    #include <pddl_parser/effect.hh>
+    #include <pddl_parser/function.hh>
+    #include <pddl_parser/instance.hh>
+    #include <pddl_parser/numeric_expression.hh>
+    #include <pddl_parser/predicate.hh>
+    #include <pddl_parser/state.hh>
+    #include <pddl_parser/typed_name.hh>
 
     // Forward declarations
     namespace pddl_parser {
@@ -41,8 +41,10 @@
 %code top
 {
     #include <iostream>
+
+    #include <parser.bison.hh>
+
     #include "scanner.hh"
-    #include "parser.bison.hh"
 
     // Our implementation of yylex:
     static pddl_parser::Parser::symbol_type yylex(pddl_parser::Scanner &scanner) {

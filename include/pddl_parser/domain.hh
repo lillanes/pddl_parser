@@ -7,10 +7,10 @@
 #include <unordered_set>
 #include <string>
 
-#include "action.hh"
-#include "function.hh"
-#include "predicate.hh"
-#include "typed_name.hh"
+#include <pddl_parser/action.hh>
+#include <pddl_parser/function.hh>
+#include <pddl_parser/predicate.hh>
+#include <pddl_parser/typed_name.hh>
 
 namespace pddl_parser {
 

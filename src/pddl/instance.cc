@@ -3,7 +3,7 @@
 #include <set>
 #include <utility>
 
-#include "instance.hh"
+#include <pddl_parser/instance.hh>
 
 namespace pddl_parser {
 

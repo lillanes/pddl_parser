@@ -1,11 +1,14 @@
 #ifndef PDDL_PARSER_UTILITY_HH
 #define PDDL_PARSER_UTILITY_HH
 
-#include "domain.hh"
-#include "instance.hh"
-#include "typed_name.hh"
+#include <deque>
+#include <string>
 
 namespace pddl_parser {
+
+class Domain;
+class Instance;
+class TypedName;
 
 class ObjectFetcher {
     Domain const &domain;

@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "function.hh"
+#include <pddl_parser/function.hh>
 
 namespace pddl_parser {
 

@@ -1,9 +1,11 @@
 %{ /* -*- C++ -*- */
 #include <iostream>
 #include <cstdlib>
+
+#include <parser.bison.hh>
+#include <location.hh>
+
 #include "scanner.hh"
-#include "parser.bison.hh"
-#include "location.hh"
 
 // Ignore some warnings in the auto-generated code:
 #pragma GCC diagnostic ignored "-Wsign-compare"

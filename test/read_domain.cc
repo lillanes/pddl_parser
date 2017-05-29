@@ -3,8 +3,8 @@
 #include <sstream>
 #include <string>
 
-#include "domain.hh"
-#include "parse.hh"
+#include <pddl_parser/domain.hh>
+#include <pddl_parser/parse.hh>
 
 using namespace pddl_parser;
 

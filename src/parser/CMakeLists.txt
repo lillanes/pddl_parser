@@ -38,7 +38,7 @@ add_library(
 target_link_libraries(pddl_parser pddl)
 
 target_include_directories(pddl_parser
-  INTERFACE "${PROJECT_SOURCE_DIR}/include"
+  PUBLIC "${PROJECT_SOURCE_DIR}/include"
   PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
           "${CMAKE_CURRENT_BINARY_DIR}")
 

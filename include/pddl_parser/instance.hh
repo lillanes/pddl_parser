@@ -7,11 +7,9 @@
 #include <unordered_set>
 #include <string>
 
-#include "domain.hh"
-#include "function.hh"
-#include "predicate.hh"
-#include "state.hh"
-#include "typed_name.hh"
+#include <pddl_parser/condition.hh>
+#include <pddl_parser/state.hh>
+#include <pddl_parser/typed_name.hh>
 
 namespace pddl_parser {
 

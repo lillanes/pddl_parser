@@ -11,7 +11,7 @@
 #undef YY_DECL
 #define YY_DECL pddl_parser::Parser::symbol_type pddl_parser::Scanner::get_next_token()
 
-#include "parser.bison.hh"
+#include <parser.bison.hh>
 
 namespace pddl_parser {
 

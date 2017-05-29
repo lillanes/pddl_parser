@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "action.hh"
+#include <pddl_parser/action.hh>
 
 namespace pddl_parser {
 

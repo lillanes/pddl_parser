@@ -1,8 +1,8 @@
 #include <iterator>
 
-#include "canonicalization.hh"
-#include "condition.hh"
-#include "effect.hh"
+#include <pddl_parser/canonicalization.hh>
+#include <pddl_parser/condition.hh>
+#include <pddl_parser/effect.hh>
 
 namespace pddl_parser {
 

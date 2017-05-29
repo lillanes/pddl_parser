@@ -5,10 +5,10 @@
 #include <string>
 #include <utility>
 
-#include "domain.hh"
-#include "instance.hh"
-
 namespace pddl_parser {
+
+class Domain;
+class Instance;
 
 Domain parse_domain(char const *domain_fn);
 Domain parse_domain(std::string const &domain_fn);

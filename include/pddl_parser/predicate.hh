@@ -6,9 +6,9 @@
 #include <string>
 #include <unordered_map>
 
-#include "typed_name.hh"
-
 namespace pddl_parser {
+
+class TypedName;
 
 class Predicate {
     std::string name;

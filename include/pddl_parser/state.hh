@@ -6,10 +6,6 @@
 #include <iostream>
 #include <string>
 
-#include "function.hh"
-#include "predicate.hh"
-#include "typed_name.hh"
-
 namespace pddl_parser {
 
 class GroundAtom {

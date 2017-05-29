@@ -15,7 +15,7 @@ set(sources
 
 add_library(pddl STATIC ${sources})
 
-target_include_directories(pddl INTERFACE "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(pddl PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 install(
   TARGETS pddl

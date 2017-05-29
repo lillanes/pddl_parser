@@ -7,9 +7,9 @@
 #include <string>
 #include <unordered_map>
 
-#include "condition.hh"
-#include "effect.hh"
-#include "typed_name.hh"
+#include <pddl_parser/condition.hh>
+#include <pddl_parser/effect.hh>
+#include <pddl_parser/typed_name.hh>
 
 namespace pddl_parser {
 

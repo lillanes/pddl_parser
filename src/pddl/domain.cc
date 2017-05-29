@@ -3,7 +3,7 @@
 #include <set>
 #include <utility>
 
-#include "domain.hh"
+#include <pddl_parser/domain.hh>
 
 namespace pddl_parser {
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "typed_name.hh"
+#include <pddl_parser/typed_name.hh>
 
 namespace pddl_parser {
 

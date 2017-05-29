@@ -1,6 +1,7 @@
 #include <utility>
 
-#include "predicate.hh"
+#include <pddl_parser/predicate.hh>
+#include <pddl_parser/typed_name.hh>
 
 namespace pddl_parser {
 

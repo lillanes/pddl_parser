@@ -1,6 +1,6 @@
 #include <utility>
 
-#include "numeric_expression.hh"
+#include <pddl_parser/numeric_expression.hh>
 
 namespace pddl_parser {
 
