@@ -449,6 +449,10 @@ effect:
     {
         $$ = std::move($3);
     }
+  | p_effect
+    {
+        $$ = std::deque<Effect>({$1});
+    }
   ;
 
 p_effect:
