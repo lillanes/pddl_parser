@@ -2,6 +2,7 @@
 
 #include <pddl_parser/canonicalization.hh>
 #include <pddl_parser/condition.hh>
+#include <pddl_parser/copyable_unique_ptr.hh>
 #include <pddl_parser/effect.hh>
 
 namespace pddl_parser {
@@ -37,6 +38,31 @@ CanonicalCondition::CanonicalCondition(
     NumericComparison const &numeric_comparison)
     : CanonicalBase(),
       numeric_comparisons(1, numeric_comparison) {
+}
+
+Condition CanonicalCondition::decanonicalize() {
+    if (!numeric_comparisons.empty()) {
+        std::cerr << "Conversion of canonical condition into PDDL condition is unimplemented!"
+                  << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    std::deque<Condition> conjuncts;
+
+    auto name = predicate_names.begin();
+    auto params = parameters.begin();
+    auto negated = negations.begin();
+
+    while (name != predicate_names.end()) {
+        conjuncts.emplace_back(new Literal(std::move(*name),
+                                           std::move(*params),
+                                           *negated));
+        ++name;
+        ++params;
+        ++negated;
+    }
+
+    return Condition(new Conjunction(std::move(conjuncts)));
 }
 
 void CanonicalCondition::join_with(CanonicalCondition &&other) {

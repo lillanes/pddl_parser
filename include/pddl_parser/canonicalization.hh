@@ -21,6 +21,9 @@ protected:
     void join_with(CanonicalBase &&other);
 };
 
+struct ConditionBase;
+template<class T> class CopyableUniquePtr;
+typedef CopyableUniquePtr<ConditionBase> Condition;
 struct NumericComparison;
 
 struct CanonicalCondition : public CanonicalBase {
@@ -32,6 +35,8 @@ struct CanonicalCondition : public CanonicalBase {
                        bool negated);
     CanonicalCondition(NumericComparison const &numeric_comparison);
     void join_with(CanonicalCondition &&other);
+
+    Condition decanonicalize();
 };
 
 struct NumericEffect;
