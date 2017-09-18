@@ -152,6 +152,10 @@ std::unordered_map<std::string,Action> const & Domain::get_actions() const {
     return actions;
 }
 
+std::unordered_map<std::string,TypedName> const & Domain::get_types() const {
+    return types;
+}
+
 std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     stream << "( define ( domain " << domain.name << " )" << std::endl;
 
