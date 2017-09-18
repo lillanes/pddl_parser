@@ -12,14 +12,9 @@
 
 namespace pddl_parser {
 
-class CanonicalCondition;
+struct CanonicalCondition;
 
-class ConditionBase {
-    friend class CopyableUniquePtr<ConditionBase>;
-protected:
-    virtual ConditionBase * clone() const = 0;
-    virtual void print(std::ostream &stream) const = 0;
-public:
+struct ConditionBase {
     virtual bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
@@ -27,17 +22,19 @@ public:
     virtual CanonicalCondition canonicalize() const = 0;
     friend std::ostream& operator<<(std::ostream &stream,
                                     ConditionBase const &condition);
+
+protected:
+    friend class CopyableUniquePtr<ConditionBase>;
+    virtual ConditionBase * clone() const = 0;
+    virtual void print(std::ostream &stream) const = 0;
+
 };
 
 typedef CopyableUniquePtr<ConditionBase> Condition;
 
-class Conjunction : public ConditionBase {
+struct Conjunction : public ConditionBase {
     std::deque<Condition> conjuncts;
 
-    ConditionBase * clone() const;
-    void print(std::ostream &stream) const;
-
-public:
     Conjunction(std::deque<Condition> &&conjuncts);
 
     bool validate(
@@ -45,17 +42,17 @@ public:
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
     CanonicalCondition canonicalize() const;
+
+private:
+    ConditionBase * clone() const;
+    void print(std::ostream &stream) const;
 };
 
-class Literal : public ConditionBase {
+struct Literal : public ConditionBase {
     std::string predicate_name;
     std::deque<std::string> parameters;
     bool negated;
 
-    ConditionBase * clone() const;
-    void print(std::ostream &stream) const;
-
-public:
     Literal(std::string &&predicate_name,
             std::deque<std::string> &&parameters,
             bool negated=false);
@@ -65,6 +62,10 @@ public:
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
     CanonicalCondition canonicalize() const;
+
+private:
+    ConditionBase * clone() const;
+    void print(std::ostream &stream) const;
 };
 
 enum Comparator {
@@ -75,15 +76,11 @@ enum Comparator {
     GT
 };
 
-class NumericComparison : public ConditionBase {
+struct NumericComparison : public ConditionBase {
     Comparator comparator;
     NumericExpression lhs;
     NumericExpression rhs;
 
-    ConditionBase * clone() const;
-    void print(std::ostream &stream) const;
-
-public:
     NumericComparison(Comparator comparator,
                       NumericExpression &&lhs,
                       NumericExpression &&rhs);
@@ -94,9 +91,9 @@ public:
         std::string const &action_name) const;
     CanonicalCondition canonicalize() const;
 
-    Comparator get_comparator() const;
-    NumericExpression const & get_lhs() const;
-    NumericExpression const & get_rhs() const;
+private:
+    ConditionBase * clone() const;
+    void print(std::ostream &stream) const;
 };
 
 } // namespace pddl_parser

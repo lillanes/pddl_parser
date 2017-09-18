@@ -23,7 +23,7 @@ void Instance::set_requirements(std::deque<std::string> &&requirements) {
 
 void Instance::set_objects(std::deque<TypedName> &&objects) {
     for (TypedName &object : objects) {
-        std::string key(object.get_name());
+        std::string key(object.name);
         this->objects[key] = std::move(object);
     }
 }
@@ -41,22 +41,6 @@ void Instance::add_init_function(std::string &&name,
 
 void Instance::set_goal(Condition &&goal) {
     this->goal = std::move(goal);
-}
-
-std::string const & Instance::get_name() const {
-    return name;
-}
-
-std::string const & Instance::get_domain_name() const {
-    return domain_name;
-}
-
-State const & Instance::get_init() const {
-    return init;
-}
-
-Condition const & Instance::get_goal() const {
-    return goal;
 }
 
 std::ostream& operator<<(std::ostream &stream, Instance const &instance) {

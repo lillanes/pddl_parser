@@ -20,16 +20,16 @@ int main(int, char **argv) {
     TypedName const &t01 = fetcher("t01");
     TypedName const &depot = fetcher("depot");
 
-    if(t01.get_name() != "t01") {
+    if(t01.name != "t01") {
         return EXIT_FAILURE;
     }
-    if(t01.get_type_name() != "truck") {
+    if(t01.type_name != "truck") {
         return EXIT_FAILURE;
     }
-    if(depot.get_name() != "depot") {
+    if(depot.name != "depot") {
         return EXIT_FAILURE;
     }
-    if(depot.get_type_name() != "location") {
+    if(depot.type_name != "location") {
         return EXIT_FAILURE;
     }
 

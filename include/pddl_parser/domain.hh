@@ -14,14 +14,7 @@
 
 namespace pddl_parser {
 
-class Domain {
-    friend class Parser;
-    friend class Instance;
-
-    friend class ObjectFetcher;
-    friend class TypeChecker;
-    friend class TypeMembersFetcher;
-
+struct Domain {
     std::string name;
     std::unordered_set<std::string> requirements;
     std::unordered_map<std::string,TypedName> types;
@@ -37,11 +30,6 @@ class Domain {
     void set_predicates(std::deque<Predicate> &&predicates);
     void set_functions(std::deque<Function> &&functions);
 
-    Predicate const& get_predicate(std::string &name) const;
-    Function const& get_function(std::string &name) const;
-    TypedName const& get_constant(std::string &name) const;
-
-public:
     Domain();
     Domain(std::string &&name,
            std::deque<std::string> &&requirements,
@@ -54,12 +42,6 @@ public:
     void add_action(Action &&action);
 
     bool validate() const;
-
-    std::string const & get_name() const;
-    std::unordered_map<std::string,Predicate> const & get_predicates() const;
-    std::unordered_map<std::string,Function> const & get_functions() const;
-    std::unordered_map<std::string,Action> const & get_actions() const;
-    std::unordered_map<std::string,TypedName> const & get_types() const;
 
     friend std::ostream& operator<<(std::ostream &stream, Domain const &domain);
 

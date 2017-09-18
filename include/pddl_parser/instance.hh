@@ -13,12 +13,7 @@
 
 namespace pddl_parser {
 
-class Instance {
-    friend class Parser;
-
-    friend class ObjectFetcher;
-    friend class TypeMembersFetcher;
-
+struct Instance {
     std::string name;
     std::string domain_name;
     std::unordered_set<std::string> requirements;
@@ -37,13 +32,7 @@ class Instance {
                            double value);
     void set_goal(Condition &&goal);
 
-public:
     Instance() = default;
-
-    std::string const & get_name() const;
-    std::string const & get_domain_name() const;
-    State const & get_init() const;
-    Condition const & get_goal() const;
 
     friend std::ostream& operator<<(std::ostream &stream,
                                     Instance const &instance);

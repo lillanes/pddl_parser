@@ -13,24 +13,18 @@
 
 namespace pddl_parser {
 
-class Action {
+struct Action {
     std::string name;
     std::unordered_map<std::string, size_t> parameters_map;
     std::deque<TypedName> parameters;
     Condition condition;
     std::deque<Effect> effects;
 
-public:
     Action() = default;
     Action(std::string &&name,
            std::deque<TypedName> &&parameters,
            Condition &&condition,
            std::deque<Effect> &&effects);
-
-    std::string const & get_name() const;
-    std::deque<TypedName> const & get_parameters() const;
-    Condition const & get_condition() const;
-    std::deque<Effect> const & get_effects() const;
 
     bool validate(
         std::unordered_map<std::string,TypedName> const &types,

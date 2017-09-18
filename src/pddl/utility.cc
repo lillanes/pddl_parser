@@ -30,8 +30,7 @@ bool TypeChecker::operator()(std::string const &type_name,
     else if (type_name == "object") {
         return false;
     }
-    return this->operator()(domain.types.at(type_name).get_type_name(),
-                            target_type);
+    return this->operator()(domain.types.at(type_name).type_name, target_type);
 }
 
 TypeMembersFetcher::TypeMembersFetcher(Domain const &domain,
@@ -47,13 +46,13 @@ std::deque<std::string> TypeMembersFetcher::operator()(
     std::deque<std::string> output;
 
     for (auto const &pair : domain.constants) {
-        if (type_checker(pair.second.get_type_name(), type_name)) {
-            output.emplace_back(pair.second.get_name());
+        if (type_checker(pair.second.type_name, type_name)) {
+            output.emplace_back(pair.second.name);
         }
     }
     for (auto const &pair : instance.objects) {
-        if (type_checker(pair.second.get_type_name(), type_name)) {
-            output.emplace_back(pair.second.get_name());
+        if (type_checker(pair.second.type_name, type_name)) {
+            output.emplace_back(pair.second.name);
         }
     }
 

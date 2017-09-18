@@ -12,55 +12,52 @@
 
 namespace pddl_parser {
 
-class NumericExpressionBase {
-    friend class CopyableUniquePtr<NumericExpressionBase>;
-protected:
-    virtual NumericExpressionBase * clone() const = 0;
-    virtual void print(std::ostream& stream) const = 0;
-public:
+struct NumericExpressionBase {
     virtual bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const = 0;
     friend std::ostream& operator<<(std::ostream &stream,
                                     NumericExpressionBase const &num_exp);
+
+protected:
+    friend class CopyableUniquePtr<NumericExpressionBase>;
+    virtual NumericExpressionBase * clone() const = 0;
+    virtual void print(std::ostream& stream) const = 0;
 };
 
 typedef CopyableUniquePtr<NumericExpressionBase> NumericExpression;
 
-class Number : public NumericExpressionBase {
+struct Number : public NumericExpressionBase {
     double value;
 
-    NumericExpressionBase * clone() const;
-    void print(std::ostream& stream) const;
-
-public:
     Number(double value);
 
-    double get_value() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
+
+private:
+    NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 };
 
-class AtomicExpression : public NumericExpressionBase {
+struct AtomicExpression : public NumericExpressionBase {
     std::string function_name;
     std::deque<std::string> parameters;
 
-    NumericExpressionBase * clone() const;
-    void print(std::ostream& stream) const;
-
-public:
     AtomicExpression(std::string &&function_name,
                      std::deque<std::string> &&parameters);
 
-    std::string const & get_function_name() const;
-    std::deque<std::string> const & get_parameters() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
+
+private:
+    NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 };
 
 enum BinaryOperator {
@@ -70,43 +67,39 @@ enum BinaryOperator {
     DIV
 };
 
-class BinaryExpression : public NumericExpressionBase {
+struct BinaryExpression : public NumericExpressionBase {
     BinaryOperator binary_operator;
     NumericExpression lhs;
     NumericExpression rhs;
 
-    NumericExpressionBase * clone() const;
-    void print(std::ostream& stream) const;
-
-public:
     BinaryExpression(BinaryOperator binary_operator,
                      NumericExpression &&lhs,
                      NumericExpression &&rhs);
 
-    BinaryOperator get_binary_operator() const;
-    NumericExpression const & get_lhs() const;
-    NumericExpression const & get_rhs() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
+
+private:
+    NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 };
 
-class InverseExpression : public NumericExpressionBase {
+struct InverseExpression : public NumericExpressionBase {
     NumericExpression expression;
     CopyableUniquePtr<NumericExpressionBase> expression_;
 
-    NumericExpressionBase * clone() const;
-    void print(std::ostream& stream) const;
-
-public:
     InverseExpression(NumericExpression &&expression);
 
-    NumericExpression const &get_expression() const;
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
+
+private:
+    NumericExpressionBase * clone() const;
+    void print(std::ostream& stream) const;
 };
 
 } // namespace pddl_parser

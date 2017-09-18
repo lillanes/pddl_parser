@@ -7,8 +7,7 @@
 
 namespace pddl_parser {
 
-class CanonicalBase {
-protected:
+struct CanonicalBase {
     std::deque<std::string> predicate_names;
     std::deque<std::deque<std::string>> parameters;
     std::deque<bool> negations;
@@ -17,41 +16,35 @@ protected:
     CanonicalBase(std::string predicate_name,
                   std::deque<std::string> parameters,
                   bool negated);
+
+protected:
     void join_with(CanonicalBase &&other);
-public:
-    std::deque<std::string> const & get_predicate_names() const;
-    std::deque<std::deque<std::string>> const & get_parameters() const;
-    std::deque<bool> const & get_negations() const;
 };
 
-class NumericComparison;
+struct NumericComparison;
 
-class CanonicalCondition : public CanonicalBase {
+struct CanonicalCondition : public CanonicalBase {
     std::deque<NumericComparison> numeric_comparisons;
 
-public:
     CanonicalCondition() = default;
     CanonicalCondition(std::string predicate_name,
                        std::deque<std::string> parameters,
                        bool negated);
     CanonicalCondition(NumericComparison const &numeric_comparison);
     void join_with(CanonicalCondition &&other);
-    std::deque<NumericComparison> const & get_numeric_comparisons() const;
 };
 
-class NumericEffect;
+struct NumericEffect;
 
-class CanonicalEffect : public CanonicalBase {
+struct CanonicalEffect : public CanonicalBase {
     std::deque<NumericEffect> numeric_effects;
 
-public:
     CanonicalEffect() = default;
     CanonicalEffect(std::string predicate_name,
                     std::deque<std::string> parameters,
                     bool negated);
     CanonicalEffect(NumericEffect const &numeric_effect);
     void join_with(CanonicalEffect &&other);
-    std::deque<NumericEffect> const & get_numeric_effects() const;
 };
 
 } // namespace pddl_parser

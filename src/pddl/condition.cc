@@ -145,16 +145,4 @@ CanonicalCondition NumericComparison::canonicalize() const {
     return CanonicalCondition(*this);
 }
 
-Comparator NumericComparison::get_comparator() const {
-    return comparator;
-}
-
-NumericExpression const & NumericComparison::get_lhs() const {
-    return lhs;
-}
-
-NumericExpression const & NumericComparison::get_rhs() const {
-    return rhs;
-}
-
 } // namespace pddl_parser

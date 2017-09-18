@@ -22,10 +22,6 @@ void Number::print(std::ostream &stream) const {
     stream << value;
 }
 
-double Number::get_value() const {
-    return value;
-}
-
 bool Number::validate(
     std::unordered_map<std::string,TypedName> const & /*constants*/,
     std::unordered_map<std::string,size_t> const & /*parameters*/,
@@ -50,14 +46,6 @@ void AtomicExpression::print(std::ostream &stream) const {
         stream << p << " ";
     }
     stream << ")";
-}
-
-std::string const & AtomicExpression::get_function_name() const {
-    return function_name;
-}
-
-std::deque<std::string> const & AtomicExpression::get_parameters() const {
-    return parameters;
 }
 
 bool AtomicExpression::validate(
@@ -110,18 +98,6 @@ void BinaryExpression::print(std::ostream &stream) const {
     stream << " )";
 }
 
-BinaryOperator BinaryExpression::get_binary_operator() const {
-    return binary_operator;
-}
-
-NumericExpression const & BinaryExpression::get_lhs() const {
-    return lhs;
-}
-
-NumericExpression const & BinaryExpression::get_rhs() const {
-    return rhs;
-}
-
 bool BinaryExpression::validate(
     std::unordered_map<std::string,TypedName> const & constants,
     std::unordered_map<std::string,size_t> const & action_parameters,
@@ -140,10 +116,6 @@ NumericExpressionBase * InverseExpression::clone() const {
 
 void InverseExpression::print(std::ostream &stream) const {
     stream << "( - " << expression << " )";
-}
-
-NumericExpression const & InverseExpression::get_expression() const {
-    return expression;
 }
 
 bool InverseExpression::validate(

@@ -14,7 +14,7 @@ Action::Action(std::string &&name,
       effects(std::move(effects)) {
     size_t index = 0;
     for (auto const &pair : this->parameters) {
-        parameters_map[pair.get_name()] = index++;
+        parameters_map[pair.name] = index++;
     }
 }
 
@@ -39,22 +39,6 @@ bool Action::validate(
     }
 
     return valid;
-}
-
-std::string const & Action::get_name() const {
-    return name;
-}
-
-std::deque<TypedName> const & Action::get_parameters() const {
-    return parameters;
-}
-
-Condition const & Action::get_condition() const {
-    return condition;
-}
-
-std::deque<Effect> const & Action::get_effects() const {
-    return effects;
 }
 
 std::ostream& operator<<(std::ostream &stream, Action const &action) {

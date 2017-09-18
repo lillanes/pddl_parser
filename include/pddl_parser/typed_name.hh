@@ -6,17 +6,13 @@
 
 namespace pddl_parser {
 
-class TypedName {
+struct TypedName {
     std::string name;
     std::string type_name;
 
-public:
     TypedName() = default;
     TypedName(std::string &&name);
     TypedName(std::string &&name, std::string &&type_name);
-
-    std::string const & get_name() const;
-    std::string const & get_type_name() const;
 
     bool validate(std::unordered_map<std::string,TypedName> const &types) const;
 

@@ -24,14 +24,6 @@ bool TypedName::validate(
     return true;
 }
 
-std::string const & TypedName::get_name() const {
-    return name;
-}
-
-std::string const & TypedName::get_type_name() const {
-    return type_name;
-}
-
 std::ostream & operator<<(std::ostream &stream,
                           const pddl_parser::TypedName &tn) {
     stream << tn.name << " - " << tn.type_name;

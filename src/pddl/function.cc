@@ -22,14 +22,6 @@ bool Function::validate(
     return valid;
 }
 
-std::string const & Function::get_name() const {
-    return name;
-}
-
-std::deque<TypedName> const & Function::get_variables() const {
-    return variables;
-}
-
 std::ostream& operator<<(std::ostream &stream, Function const &function) {
     stream << "( " << function.name << " ";
     for (auto const &v : function.variables) {

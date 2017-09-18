@@ -23,42 +23,30 @@ Domain::Domain(std::string &&name,
                    std::make_move_iterator(requirements.end())) {
     requirements.clear();
     for (TypedName &type : types) {
-        std::string key(type.get_name());
+        std::string key(type.name);
         this->types[key] = std::move(type);
     }
     types.clear();
     for (TypedName &constant : constants) {
-        std::string key(constant.get_name());
+        std::string key(constant.name);
         this->constants[key] = std::move(constant);
     }
     constants.clear();
     for (Predicate &predicate : predicates) {
-        std::string key(predicate.get_name());
+        std::string key(predicate.name);
         this->predicates[key] = std::move(predicate);
     }
     predicates.clear();
     for (Function &function : functions) {
-        std::string key(function.get_name());
+        std::string key(function.name);
         this->functions[key] = std::move(function);
     }
     functions.clear();
     for (Action &action : actions) {
-        std::string key(action.get_name());
+        std::string key(action.name);
         this->actions[key] = std::move(action);
     }
     actions.clear();
-}
-
-Predicate const& Domain::get_predicate(std::string &name) const {
-    return predicates.at(name);
-}
-
-Function const& Domain::get_function(std::string &name) const {
-    return functions.at(name);
-}
-
-TypedName const& Domain::get_constant(std::string &name) const {
-    return constants.at(name);
 }
 
 void Domain::set_name(std::string &&name) {
@@ -73,34 +61,34 @@ void Domain::set_requirements(std::deque<std::string> &&requirements) {
 
 void Domain::set_types(std::deque<TypedName> &&types) {
     for (TypedName &type : types) {
-        std::string key(type.get_name());
+        std::string key(type.name);
         this->types[key] = std::move(type);
     }
 }
 
 void Domain::set_constants(std::deque<TypedName> &&constants) {
     for (TypedName &constant : constants) {
-        std::string key(constant.get_name());
+        std::string key(constant.name);
         this->constants[key] = std::move(constant);
     }
 }
 
 void Domain::set_predicates(std::deque<Predicate> &&predicates) {
     for (Predicate &predicate : predicates) {
-        std::string key(predicate.get_name());
+        std::string key(predicate.name);
         this->predicates[key] = std::move(predicate);
     }
 }
 
 void Domain::set_functions(std::deque<Function> &&functions) {
     for (Function &function : functions) {
-        std::string key(function.get_name());
+        std::string key(function.name);
         this->functions[key] = std::move(function);
     }
 }
 
 void Domain::add_action( pddl_parser::Action &&action ) {
-    std::string key(action.get_name());
+    std::string key(action.name);
     this->actions[key] = std::move(action);
 }
 
@@ -136,26 +124,6 @@ bool Domain::validate() const {
     return valid;
 }
 
-std::string const & Domain::get_name() const {
-    return name;
-}
-
-std::unordered_map<std::string,Predicate> const & Domain::get_predicates() const {
-    return predicates;
-}
-
-std::unordered_map<std::string,Function> const & Domain::get_functions() const {
-    return functions;
-}
-
-std::unordered_map<std::string,Action> const & Domain::get_actions() const {
-    return actions;
-}
-
-std::unordered_map<std::string,TypedName> const & Domain::get_types() const {
-    return types;
-}
-
 std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     stream << "( define ( domain " << domain.name << " )" << std::endl;
 
@@ -174,7 +142,7 @@ std::ostream& operator<<(std::ostream &stream, Domain const &domain) {
     std::map<std::string,TypedName> ordered_types(domain.types.begin(),
                                                   domain.types.end());
     for (auto const &t : ordered_types) {
-        if (t.second.get_name() != "object") {
+        if (t.second.name != "object") {
             stream << std::endl << "    " << t.second;
         }
     }

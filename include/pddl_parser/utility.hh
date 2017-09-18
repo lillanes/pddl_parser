@@ -6,9 +6,9 @@
 
 namespace pddl_parser {
 
-class Domain;
-class Instance;
-class TypedName;
+struct Domain;
+struct Instance;
+struct TypedName;
 
 class ObjectFetcher {
     Domain const &domain;
