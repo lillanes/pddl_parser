@@ -458,11 +458,11 @@ effect:
 p_effect:
     "(" NAME term_star ")"
     {
-        $$ = Effect(new AddEffect(std::move($2), std::move($3)));
+        $$ = Effect(new PropositionalEffect(std::move($2), std::move($3), true));
     }
   | "(" "not" "(" NAME term_star ")" ")"
     {
-        $$ = Effect(new DeleteEffect(std::move($4), std::move($5)));
+        $$ = Effect(new PropositionalEffect(std::move($4), std::move($5), false));
     }
   | "(" "assign" f_head f_exp ")"
     {

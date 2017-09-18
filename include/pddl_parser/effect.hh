@@ -32,30 +32,14 @@ protected:
 
 typedef CopyableUniquePtr<EffectBase> Effect;
 
-struct AddEffect : public EffectBase {
+struct PropositionalEffect : public EffectBase {
     std::string predicate_name;
     std::deque<std::string> parameters;
+    bool is_add;
 
-    AddEffect(std::string &&predicate_name,
-              std::deque<std::string> &&parameters);
-
-    bool validate(
-        std::unordered_map<std::string,TypedName> const &constants,
-        std::unordered_map<std::string,size_t> const &action_parameters,
-        std::string const &action_name) const;
-    CanonicalEffect canonicalize() const;
-
-private:
-    EffectBase * clone() const;
-    void print(std::ostream &stream) const;
-};
-
-struct DeleteEffect : public EffectBase {
-    std::string predicate_name;
-    std::deque<std::string> parameters;
-
-    DeleteEffect(std::string &&predicate_name,
-                 std::deque<std::string> &&parameters);
+    PropositionalEffect(std::string &&predicate_name,
+                        std::deque<std::string> &&parameters,
+                        bool is_add);
 
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,

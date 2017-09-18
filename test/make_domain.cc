@@ -57,8 +57,12 @@ int main(int, char **argv) {
 
     condition = Condition(new Literal("at", {"?t", "?from"}));
 
-    effects.emplace_back(Effect(new DeleteEffect("at", {"?t", "?from"})));
-    effects.emplace_back(Effect(new AddEffect("at", {"?t", "?to"})));
+    effects.emplace_back(Effect(new PropositionalEffect("at",
+                                                        {"?t", "?from"},
+                                                        false)));
+    effects.emplace_back(Effect(new PropositionalEffect("at",
+                                                        {"?t", "?to"},
+                                                        true)));
 
     variables.emplace_back("?t", "truck");
     variables.emplace_back("?from", "location");
@@ -84,8 +88,12 @@ int main(int, char **argv) {
 
     condition = Condition(new Conjunction(std::move(conditions)));
 
-    effects.emplace_back(Effect(new DeleteEffect("at", {"?b", "?l"})));
-    effects.emplace_back(Effect(new AddEffect("in", {"?b", "?t"})));
+    effects.emplace_back(Effect(new PropositionalEffect("at",
+                                                        {"?b", "?l"},
+                                                        false)));
+    effects.emplace_back(Effect(new PropositionalEffect("in",
+                                                        {"?b", "?t"},
+                                                        true)));
     rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
     effects.emplace_back(Effect(new NumericEffect(AssignmentOperator::INCREASE,
                                                   "weight", {"?t"},
@@ -105,8 +113,12 @@ int main(int, char **argv) {
 
     condition = Condition(new Conjunction(std::move(conditions)));
 
-    effects.emplace_back(Effect(new DeleteEffect("in", {"?b", "?t"})));
-    effects.emplace_back(Effect(new AddEffect("at", {"?b", "?l"})));
+    effects.emplace_back(Effect(new PropositionalEffect("in",
+                                                        {"?b", "?t"},
+                                                        false)));
+    effects.emplace_back(Effect(new PropositionalEffect("at",
+                                                        {"?b", "?l"},
+                                                        true)));
     rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
     effects.emplace_back(Effect(new NumericEffect(AssignmentOperator::DECREASE,
                                                   "weight", {"?t"},

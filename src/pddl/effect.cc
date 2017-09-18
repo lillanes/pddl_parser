@@ -10,26 +10,35 @@ std::ostream& operator<<(std::ostream &stream, EffectBase const &effect) {
     return stream;
 }
 
-AddEffect::AddEffect(std::string &&predicate_name,
-                     std::deque<std::string> &&parameters)
+PropositionalEffect::PropositionalEffect(std::string &&predicate_name,
+                                         std::deque<std::string> &&parameters,
+                                         bool is_add)
     : predicate_name(std::move(predicate_name)),
-      parameters(std::move(parameters)) {
+      parameters(std::move(parameters)),
+      is_add(is_add) {
 }
 
-EffectBase * AddEffect::clone() const {
-    return new AddEffect(std::string(predicate_name),
-                         std::deque<std::string>(parameters));
+EffectBase * PropositionalEffect::clone() const {
+    return new PropositionalEffect(std::string(predicate_name),
+                                   std::deque<std::string>(parameters),
+                                   is_add);
 }
 
-void AddEffect::print(std::ostream &stream) const {
+void PropositionalEffect::print(std::ostream &stream) const {
+    if (!is_add) {
+        stream << "( not ";
+    }
     stream << "( " << predicate_name << " ";
     for (auto const &p : parameters) {
         stream << p << " ";
     }
     stream << ")";
+    if (!is_add) {
+        stream << " )";
+    }
 }
 
-bool AddEffect::validate(
+bool PropositionalEffect::validate(
     std::unordered_map<std::string,TypedName> const &constants,
     std::unordered_map<std::string,size_t> const &action_parameters,
     std::string const &action_name) const {
@@ -46,48 +55,8 @@ bool AddEffect::validate(
     return valid;
 }
 
-CanonicalEffect AddEffect::canonicalize() const {
-    return CanonicalEffect(predicate_name, parameters, false);
-}
-
-DeleteEffect::DeleteEffect(std::string &&predicate_name,
-                           std::deque<std::string> &&parameters)
-    : predicate_name(std::move(predicate_name)),
-      parameters(std::move(parameters)) {
-}
-
-EffectBase * DeleteEffect::clone() const {
-    return new DeleteEffect(std::string(predicate_name),
-                            std::deque<std::string>(parameters));
-}
-
-void DeleteEffect::print(std::ostream &stream) const {
-    stream << "( not ( " << predicate_name << " ";
-    for (auto const &p : parameters) {
-        stream << p << " ";
-    }
-    stream << ") )";
-}
-
-bool DeleteEffect::validate(
-    std::unordered_map<std::string,TypedName> const &constants,
-    std::unordered_map<std::string,size_t> const &action_parameters,
-    std::string const &action_name) const {
-    bool valid = true;
-    for (std::string const &parameter : parameters) {
-        if (!action_parameters.count(parameter)
-            && !(constants.count(parameter))) {
-            std::cerr << "ERROR: unknown parameter \"" << parameter << "\""
-                      << " in effects of action \"" << action_name
-                      << "\"" << std::endl;
-            valid = false;
-        }
-    }
-    return valid;
-}
-
-CanonicalEffect DeleteEffect::canonicalize() const {
-    return CanonicalEffect(predicate_name, parameters, true);
+CanonicalEffect PropositionalEffect::canonicalize() const {
+    return CanonicalEffect(predicate_name, parameters, !is_add);
 }
 
 NumericEffect::NumericEffect(AssignmentOperator assignment_operator,
