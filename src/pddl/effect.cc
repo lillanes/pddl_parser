@@ -1,7 +1,6 @@
 #include <iterator>
 #include <utility>
 
-#include <pddl_parser/canonicalization.hh>
 #include <pddl_parser/effect.hh>
 
 namespace pddl_parser {
