@@ -156,15 +156,14 @@
     atomic_function_skeleton_star
     atomic_function_skeleton_plus
 
-%type <std::pair<Condition, std::deque<Effect>>> action_def_body
+%type <std::pair<Condition, Effect>> action_def_body
 
 %type <Condition>
     goal_description
+    goal
+    goal_description_plus goal_description_star
     literal
     f_comp
-    goal
-%type <std::deque<Condition>>
-    goal_description_plus goal_description_star
 
 %type <std::pair<std::string,std::deque<std::string>>> f_head
 
@@ -172,7 +171,7 @@
 
 %type <Effect> p_effect
 
-%type <std::deque<Effect>>
+%type <Effect>
     p_effect_plus p_effect_star
     effect
 
@@ -296,52 +295,50 @@ action_def:
 action_def_body:
     %empty
     {
-        $$ = std::make_pair<Condition,std::deque<Effect>>(nullptr, {});
+        $$ = std::make_pair<Condition,Effect>(Condition(), Effect());
     }
   | ":precondition" goal_description
     {
-        $$ = std::make_pair<Condition,std::deque<Effect>>(std::move($2), {});
+        $$ = std::make_pair<Condition,Effect>(std::move($2), Effect());
     }
   | ":effect" effect
     {
-        $$ = std::make_pair<Condition,std::deque<Effect>>(nullptr,
-                                                          std::move($2));
+        $$ = std::make_pair<Condition,Effect>(Condition(), std::move($2));
     }
   | ":precondition" goal_description
     ":effect" effect
     {
-        $$ = std::make_pair<Condition,std::deque<Effect>>(std::move($2),
-                                                          std::move($4));
+        $$ = std::make_pair<Condition,Effect>(std::move($2), std::move($4));
     }
   ;
 
 goal_description:
     "(" ")"
     {
-        $$ = Condition(new Conjunction({}));
+        $$ = Condition();
     }
   | literal
     {
-        $$ = std::move($1);
+        $$ = Condition(std::move($1));
     }
   | "(" "and" goal_description_star ")"
     {
-        $$ = Condition(new Conjunction(std::move($3)));
+        $$ = std::move($3);
     }
   | f_comp
     {
-        $$ = std::move($1);
+        $$ = Condition(std::move($1));
     }
   ;
 
 literal:
     "(" NAME term_star ")"
     {
-        $$ = Condition(new Literal(std::move($2), std::move($3)));
+        $$ = Condition(Literal(std::move($2), std::move($3)));
     }
   | "(" "not" "(" NAME term_star ")" ")"
     {
-        $$ = Condition(new Literal(std::move($4), std::move($5), true));
+        $$ = Condition(Literal(std::move($4), std::move($5), true));
     }
   ;
 
@@ -410,40 +407,40 @@ f_head:
 f_comp:
     "(" "<" f_exp f_exp ")"
     {
-        $$ = Condition(new NumericComparison(Comparator::LT,
-                                             std::move($3),
-                                             std::move($4)));
+        $$ = Condition(NumericComparison(Comparator::LT,
+                                         std::move($3),
+                                         std::move($4)));
     }
   | "(" "<=" f_exp f_exp ")"
     {
-        $$ = Condition(new NumericComparison(Comparator::LTE,
-                                             std::move($3),
-                                             std::move($4)));
+        $$ = Condition(NumericComparison(Comparator::LTE,
+                                         std::move($3),
+                                         std::move($4)));
     }
   | "(" "=" f_exp f_exp ")"
     {
-        $$ = Condition(new NumericComparison(Comparator::EQ,
-                                             std::move($3),
-                                             std::move($4)));
+        $$ = Condition(NumericComparison(Comparator::EQ,
+                                         std::move($3),
+                                         std::move($4)));
     }
   | "(" ">=" f_exp f_exp ")"
     {
-        $$ = Condition(new NumericComparison(Comparator::GTE,
-                                             std::move($3),
-                                             std::move($4)));
+        $$ = Condition(NumericComparison(Comparator::GTE,
+                                         std::move($3),
+                                         std::move($4)));
     }
   | "(" ">" f_exp f_exp ")"
     {
-        $$ = Condition(new NumericComparison(Comparator::GT,
-                                             std::move($3),
-                                             std::move($4)));
+        $$ = Condition(NumericComparison(Comparator::GT,
+                                         std::move($3),
+                                         std::move($4)));
     }
   ;
 
 effect:
     "(" ")"
     {
-        $$ = std::deque<Effect>();
+        $$ = Effect();
     }
   | "(" "and" p_effect_star ")"
     {
@@ -451,53 +448,53 @@ effect:
     }
   | p_effect
     {
-        $$ = std::deque<Effect>({$1});
+        $$ = std::move($1);
     }
   ;
 
 p_effect:
     "(" NAME term_star ")"
     {
-        $$ = Effect(new PropositionalEffect(std::move($2), std::move($3), true));
+        $$ = Effect(PropositionalEffect(std::move($2), std::move($3), true));
     }
   | "(" "not" "(" NAME term_star ")" ")"
     {
-        $$ = Effect(new PropositionalEffect(std::move($4), std::move($5), false));
+        $$ = Effect(PropositionalEffect(std::move($4), std::move($5), false));
     }
   | "(" "assign" f_head f_exp ")"
     {
-        $$ = Effect(new NumericEffect(AssignmentOperator::ASSIGN,
-                                      std::move($3.first),
-                                      std::move($3.second),
-                                      std::move($4)));
+        $$ = Effect(NumericEffect(AssignmentOperator::ASSIGN,
+                                  std::move($3.first),
+                                  std::move($3.second),
+                                  std::move($4)));
     }
   | "(" "scale-up" f_head f_exp ")"
     {
-        $$ = Effect(new NumericEffect(AssignmentOperator::SCALE_UP,
-                                      std::move($3.first),
-                                      std::move($3.second),
-                                      std::move($4)));
+        $$ = Effect(NumericEffect(AssignmentOperator::SCALE_UP,
+                                  std::move($3.first),
+                                  std::move($3.second),
+                                  std::move($4)));
     }
   | "(" "scale-down" f_head f_exp ")"
     {
-        $$ = Effect(new NumericEffect(AssignmentOperator::SCALE_DOWN,
-                                      std::move($3.first),
-                                      std::move($3.second),
-                                      std::move($4)));
+        $$ = Effect(NumericEffect(AssignmentOperator::SCALE_DOWN,
+                                  std::move($3.first),
+                                  std::move($3.second),
+                                  std::move($4)));
     }
   | "(" "increase" f_head f_exp ")"
     {
-        $$ = Effect(new NumericEffect(AssignmentOperator::INCREASE,
-                                      std::move($3.first),
-                                      std::move($3.second),
-                                      std::move($4)));
+        $$ = Effect(NumericEffect(AssignmentOperator::INCREASE,
+                                  std::move($3.first),
+                                  std::move($3.second),
+                                  std::move($4)));
     }
   | "(" "decrease" f_head f_exp ")"
     {
-        $$ = Effect(new NumericEffect(AssignmentOperator::DECREASE,
-                                      std::move($3.first),
-                                      std::move($3.second),
-                                      std::move($4)));
+        $$ = Effect(NumericEffect(AssignmentOperator::DECREASE,
+                                  std::move($3.first),
+                                  std::move($3.second),
+                                  std::move($4)));
     }
   ;
 
@@ -692,8 +689,8 @@ structure_def_star: structure_def_plus | %empty;
 
 goal_description_plus: goal_description goal_description_star
 {
-    $2.emplace_front(std::move($1));
-    $$ = std::move($2);
+    $1.join_with(std::move($2));
+    $$ = std::move($1);
 };
 
 goal_description_star:
@@ -705,8 +702,8 @@ goal_description_star:
 
 p_effect_plus: p_effect p_effect_star
 {
-    $2.emplace_front(std::move($1));
-    $$ = std::move($2);
+    $1.join_with(std::move($2));
+    $$ = std::move($1);
 };
 
 p_effect_star:

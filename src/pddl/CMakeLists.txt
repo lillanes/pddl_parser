@@ -1,6 +1,5 @@
 set(sources
   "${CMAKE_CURRENT_SOURCE_DIR}/action.cc"
-  "${CMAKE_CURRENT_SOURCE_DIR}/canonicalization.cc"
   "${CMAKE_CURRENT_SOURCE_DIR}/condition.cc"
   "${CMAKE_CURRENT_SOURCE_DIR}/domain.cc"
   "${CMAKE_CURRENT_SOURCE_DIR}/effect.cc"

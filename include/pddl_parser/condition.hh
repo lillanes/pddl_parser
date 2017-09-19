@@ -12,43 +12,7 @@
 
 namespace pddl_parser {
 
-struct CanonicalCondition;
-
-struct ConditionBase {
-    virtual bool validate(
-        std::unordered_map<std::string,TypedName> const &constants,
-        std::unordered_map<std::string,size_t> const &action_parameters,
-        std::string const &action_name) const = 0;
-    virtual CanonicalCondition canonicalize() const = 0;
-    friend std::ostream& operator<<(std::ostream &stream,
-                                    ConditionBase const &condition);
-
-protected:
-    friend class CopyableUniquePtr<ConditionBase>;
-    virtual ConditionBase * clone() const = 0;
-    virtual void print(std::ostream &stream) const = 0;
-
-};
-
-typedef CopyableUniquePtr<ConditionBase> Condition;
-
-struct Conjunction : public ConditionBase {
-    std::deque<Condition> conjuncts;
-
-    Conjunction(std::deque<Condition> &&conjuncts);
-
-    bool validate(
-        std::unordered_map<std::string,TypedName> const &constants,
-        std::unordered_map<std::string,size_t> const &parameters,
-        std::string const &action_name) const;
-    CanonicalCondition canonicalize() const;
-
-private:
-    ConditionBase * clone() const;
-    void print(std::ostream &stream) const;
-};
-
-struct Literal : public ConditionBase {
+struct Literal {
     std::string predicate_name;
     std::deque<std::string> parameters;
     bool negated;
@@ -61,11 +25,9 @@ struct Literal : public ConditionBase {
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
-    CanonicalCondition canonicalize() const;
 
-private:
-    ConditionBase * clone() const;
-    void print(std::ostream &stream) const;
+    friend std::ostream& operator<<(std::ostream &stream,
+                                    Literal const &literal);
 };
 
 enum Comparator {
@@ -76,7 +38,7 @@ enum Comparator {
     GT
 };
 
-struct NumericComparison : public ConditionBase {
+struct NumericComparison {
     Comparator comparator;
     NumericExpression lhs;
     NumericExpression rhs;
@@ -89,11 +51,30 @@ struct NumericComparison : public ConditionBase {
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &parameters,
         std::string const &action_name) const;
-    CanonicalCondition canonicalize() const;
 
-private:
-    ConditionBase * clone() const;
-    void print(std::ostream &stream) const;
+    friend std::ostream& operator<<(std::ostream &stream,
+                                    NumericComparison const &comparison);
+};
+
+struct Condition {
+    std::deque<Literal> propositional_conditions;
+    std::deque<NumericComparison> numeric_conditions;
+
+    Condition() = default;
+    Condition(Literal &&literal);
+    Condition(NumericComparison &&numeric_comparison);
+    Condition(std::deque<Literal> &&propositional_conditions,
+              std::deque<NumericComparison> &&numeric_conditions);
+
+    void join_with(Condition &&other);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &parameters,
+        std::string const &action_name) const;
+
+    friend std::ostream& operator<<(std::ostream &stream,
+                                    Condition const &condition);
 };
 
 } // namespace pddl_parser

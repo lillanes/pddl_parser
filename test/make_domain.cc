@@ -26,9 +26,12 @@ int main(int, char **argv) {
     std::deque<Function> functions;
     std::deque<Action> actions;
     Condition condition;
-    std::deque<Effect> effects;
+    Effect effect;
 
-    std::deque<Condition> conditions;
+    std::deque<PropositionalEffect> propositional_effects;
+    std::deque<NumericEffect> numeric_effects;
+    std::deque<Literal> propositional_conditions;
+    std::deque<NumericComparison> numeric_conditions;
     std::deque<TypedName> variables;
     NumericExpression lhs;
     NumericExpression rhs;
@@ -55,14 +58,16 @@ int main(int, char **argv) {
     variables.emplace_back("?x", "locatable");
     functions.emplace_back("weight", std::move(variables));
 
-    condition = Condition(new Literal("at", {"?t", "?from"}));
+    condition = Condition(Literal("at", {"?t", "?from"}));
 
-    effects.emplace_back(Effect(new PropositionalEffect("at",
-                                                        {"?t", "?from"},
-                                                        false)));
-    effects.emplace_back(Effect(new PropositionalEffect("at",
-                                                        {"?t", "?to"},
-                                                        true)));
+    propositional_effects.emplace_back(PropositionalEffect("at",
+                                                           {"?t", "?from"},
+                                                           false));
+    propositional_effects.emplace_back(PropositionalEffect("at",
+                                                           {"?t", "?to"},
+                                                           true));
+
+    effect = Effect(std::move(propositional_effects), {});
 
     variables.emplace_back("?t", "truck");
     variables.emplace_back("?from", "location");
@@ -71,10 +76,10 @@ int main(int, char **argv) {
     actions.emplace_back("move",
                          std::move(variables),
                          std::move(condition),
-                         std::move(effects));
+                         std::move(effect));
 
-    conditions.emplace_back(Condition(new Literal("at", {"?t", "?l"})));
-    conditions.emplace_back(Condition(new Literal("at", {"?b", "?l"})));
+    propositional_conditions.emplace_back(Literal("at", {"?t", "?l"}));
+    propositional_conditions.emplace_back(Literal("at", {"?b", "?l"}));
     lhs = NumericExpression(new AtomicExpression("weight", {"?t"}));
     rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
     lhs = NumericExpression(
@@ -82,22 +87,26 @@ int main(int, char **argv) {
                              std::move(lhs),
                              std::move(rhs)));
     rhs = NumericExpression(new AtomicExpression("max-weight", {"?t"}));
-    conditions.emplace_back(Condition(new NumericComparison(Comparator::LTE,
-                                                            std::move(lhs),
-                                                            std::move(rhs))));
+    numeric_conditions.emplace_back(NumericComparison(Comparator::LTE,
+                                                      std::move(lhs),
+                                                      std::move(rhs)));
 
-    condition = Condition(new Conjunction(std::move(conditions)));
+    condition = Condition(std::move(propositional_conditions),
+                          std::move(numeric_conditions));
 
-    effects.emplace_back(Effect(new PropositionalEffect("at",
-                                                        {"?b", "?l"},
-                                                        false)));
-    effects.emplace_back(Effect(new PropositionalEffect("in",
-                                                        {"?b", "?t"},
-                                                        true)));
+    propositional_effects.emplace_back(PropositionalEffect("at",
+                                                           {"?b", "?l"},
+                                                           false));
+    propositional_effects.emplace_back(PropositionalEffect("in",
+                                                           {"?b", "?t"},
+                                                           true));
     rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
-    effects.emplace_back(Effect(new NumericEffect(AssignmentOperator::INCREASE,
-                                                  "weight", {"?t"},
-                                                  std::move(rhs))));
+    numeric_effects.emplace_back(NumericEffect(AssignmentOperator::INCREASE,
+                                               "weight", {"?t"},
+                                               std::move(rhs)));
+
+    effect = Effect(std::move(propositional_effects),
+                    std::move(numeric_effects));
 
     variables.emplace_back("?t", "truck");
     variables.emplace_back("?b", "box");
@@ -106,23 +115,26 @@ int main(int, char **argv) {
     actions.emplace_back("load",
                          std::move(variables),
                          std::move(condition),
-                         std::move(effects));
+                         std::move(effect));
 
-    conditions.emplace_back(Condition(new Literal("at", {"?t", "?l"})));
-    conditions.emplace_back(Condition(new Literal("in", {"?b", "?t"})));
+    propositional_conditions.emplace_back(Literal("at", {"?t", "?l"}));
+    propositional_conditions.emplace_back(Literal("in", {"?b", "?t"}));
 
-    condition = Condition(new Conjunction(std::move(conditions)));
+    condition = Condition(std::move(propositional_conditions), {});
 
-    effects.emplace_back(Effect(new PropositionalEffect("in",
-                                                        {"?b", "?t"},
-                                                        false)));
-    effects.emplace_back(Effect(new PropositionalEffect("at",
-                                                        {"?b", "?l"},
-                                                        true)));
+    propositional_effects.emplace_back(PropositionalEffect("in",
+                                                           {"?b", "?t"},
+                                                           false));
+    propositional_effects.emplace_back(PropositionalEffect("at",
+                                                           {"?b", "?l"},
+                                                           true));
     rhs = NumericExpression(new AtomicExpression("weight", {"?b"}));
-    effects.emplace_back(Effect(new NumericEffect(AssignmentOperator::DECREASE,
-                                                  "weight", {"?t"},
-                                                  std::move(rhs))));
+    numeric_effects.emplace_back(NumericEffect(AssignmentOperator::DECREASE,
+                                               "weight", {"?t"},
+                                               std::move(rhs)));
+
+    effect = Effect(std::move(propositional_effects),
+                    std::move(numeric_effects));
 
     variables.emplace_back("?t", "truck");
     variables.emplace_back("?b", "box");
@@ -131,7 +143,7 @@ int main(int, char **argv) {
     actions.emplace_back("unload",
                          std::move(variables),
                          std::move(condition),
-                         std::move(effects));
+                         std::move(effect));
 
     Domain domain("trucky",
                   std::move(requirements),

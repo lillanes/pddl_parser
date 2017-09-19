@@ -7,11 +7,11 @@ namespace pddl_parser {
 Action::Action(std::string &&name,
                std::deque<TypedName> &&parameters,
                Condition &&condition,
-               std::deque<Effect> &&effects)
+               Effect &&effect)
     : name(std::move(name)),
       parameters(std::move(parameters)),
       condition(std::move(condition)),
-      effects(std::move(effects)) {
+      effect(std::move(effect)) {
     size_t index = 0;
     for (auto const &pair : this->parameters) {
         parameters_map[pair.name] = index++;
@@ -31,12 +31,8 @@ bool Action::validate(
         }
     }
 
-    valid = condition->validate(constants, parameters_map, name) && valid;
-
-
-    for (Effect const &effect : effects) {
-        valid = effect->validate(constants, parameters_map, name) && valid;
-    }
+    valid = condition.validate(constants, parameters_map, name) && valid;
+    valid = effect.validate(constants, parameters_map, name) && valid;
 
     return valid;
 }
@@ -49,11 +45,7 @@ std::ostream& operator<<(std::ostream &stream, Action const &action) {
     }
     stream << ")" << std::endl;
     stream << "    :precondition " << action.condition << std::endl;
-    stream << "    :effect ( and ";
-    for (auto const &e : action.effects) {
-        stream << e << " ";
-    }
-    stream << ") )";
+    stream << "    :effect " << action.effect << " )";
     return stream;
 }
 

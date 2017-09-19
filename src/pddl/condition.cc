@@ -1,15 +1,9 @@
 #include <iterator>
 #include <utility>
 
-#include <pddl_parser/canonicalization.hh>
 #include <pddl_parser/condition.hh>
 
 namespace pddl_parser {
-
-std::ostream& operator<<(std::ostream &stream, ConditionBase const &condition) {
-    condition.print(stream);
-    return stream;
-}
 
 Literal::Literal(std::string &&predicate_name,
                  std::deque<std::string> &&parameters,
@@ -17,26 +11,6 @@ Literal::Literal(std::string &&predicate_name,
     : predicate_name(std::move(predicate_name)),
       parameters(std::move(parameters)),
       negated(negated) {
-}
-
-ConditionBase * Literal::clone() const {
-    return new Literal(std::string(predicate_name),
-                       std::deque<std::string>(parameters),
-                       negated);
-}
-
-void Literal::print(std::ostream &stream) const {
-    if (negated) {
-        stream << "( not ( ";
-    }
-    stream << "( " << predicate_name << " ";
-    for (auto const &p : parameters) {
-        stream << p << " ";
-    }
-    stream << ")";
-    if (negated) {
-        stream << " )";
-    }
 }
 
 bool Literal::validate(
@@ -56,44 +30,19 @@ bool Literal::validate(
     return valid;
 }
 
-CanonicalCondition Literal::canonicalize() const {
-    return CanonicalCondition(predicate_name, parameters, negated);
-}
-
-Conjunction::Conjunction(std::deque<Condition> &&conjuncts)
-    : conjuncts(std::move(conjuncts)) {
-}
-
-ConditionBase * Conjunction::clone() const {
-    return new Conjunction(std::deque<Condition>(conjuncts));
-}
-
-void Conjunction::print(std::ostream &stream) const {
-    stream << "( and ";
-    for (auto const &conjunct : conjuncts) {
-        stream << conjunct << " ";
+std::ostream& operator<<(std::ostream &stream, Literal const& literal) {
+    if (literal.negated) {
+        stream << "( not ( ";
+    }
+    stream << "( " << literal.predicate_name << " ";
+    for (auto const &p : literal.parameters) {
+        stream << p << " ";
     }
     stream << ")";
-}
-
-bool Conjunction::validate(
-    std::unordered_map<std::string,TypedName> const &constants,
-    std::unordered_map<std::string,size_t> const &action_parameters,
-    std::string const &action_name) const {
-    bool valid = true;
-    for (Condition const &conjunct : conjuncts) {
-        valid = conjunct->validate(constants, action_parameters, action_name)
-            && valid;
+    if (literal.negated) {
+        stream << " )";
     }
-    return valid;
-}
-
-CanonicalCondition Conjunction::canonicalize() const {
-    CanonicalCondition cc;
-    for (auto const &conjunct : conjuncts) {
-        cc.join_with(conjunct->canonicalize());
-    }
-    return cc;
+    return stream;
 }
 
 NumericComparison::NumericComparison(Comparator comparator,
@@ -104,35 +53,6 @@ NumericComparison::NumericComparison(Comparator comparator,
       rhs(std::move(rhs)) {
 }
 
-ConditionBase * NumericComparison::clone() const {
-    return new NumericComparison(comparator,
-                                 NumericExpression(lhs),
-                                 NumericExpression(rhs));
-}
-
-void NumericComparison::print(std::ostream &stream) const {
-    stream << "( ";
-    if (comparator == Comparator::LT) {
-        stream << "< ";
-    }
-    else if (comparator == Comparator::LTE) {
-        stream << "<=";
-    }
-    else if (comparator == Comparator::EQ) {
-        stream << "=";
-    }
-    else if (comparator == Comparator::GTE) {
-        stream << ">=";
-    }
-    else if (comparator == Comparator::GT) {
-        stream << ">";
-    }
-
-    stream << " " << lhs;
-    stream << " " << rhs;
-    stream << " )";
-}
-
 bool NumericComparison::validate(
     std::unordered_map<std::string,TypedName> const &constants,
     std::unordered_map<std::string,size_t> const &action_parameters,
@@ -141,8 +61,84 @@ bool NumericComparison::validate(
         && rhs->validate(constants, action_parameters, action_name);
 }
 
-CanonicalCondition NumericComparison::canonicalize() const {
-    return CanonicalCondition(*this);
+std::ostream& operator<<(std::ostream &stream,
+                         NumericComparison const &comparison) {
+    stream << "( ";
+    if (comparison.comparator == Comparator::LT) {
+        stream << "< ";
+    }
+    else if (comparison.comparator == Comparator::LTE) {
+        stream << "<=";
+    }
+    else if (comparison.comparator == Comparator::EQ) {
+        stream << "=";
+    }
+    else if (comparison.comparator == Comparator::GTE) {
+        stream << ">=";
+    }
+    else if (comparison.comparator == Comparator::GT) {
+        stream << ">";
+    }
+
+    stream << " " << comparison.lhs;
+    stream << " " << comparison.rhs;
+    stream << " )";
+
+    return stream;
+}
+
+Condition::Condition(Literal &&literal)
+    : propositional_conditions(1, std::move(literal)) {
+}
+
+Condition::Condition(NumericComparison &&numeric_comparison)
+    : numeric_conditions(1, std::move(numeric_comparison)) {
+}
+
+Condition::Condition(std::deque<Literal> &&propositional_conditions,
+                     std::deque<NumericComparison> &&numeric_conditions)
+    : propositional_conditions(std::move(propositional_conditions)),
+      numeric_conditions(std::move(numeric_conditions)) {
+}
+
+void Condition::join_with(Condition &&other) {
+    propositional_conditions.insert(
+        propositional_conditions.end(),
+        std::make_move_iterator(other.propositional_conditions.begin()),
+        std::make_move_iterator(other.propositional_conditions.end()));
+    numeric_conditions.insert(
+        numeric_conditions.end(),
+        std::make_move_iterator(other.numeric_conditions.begin()),
+        std::make_move_iterator(other.numeric_conditions.end()));
+}
+
+bool Condition::validate(
+    std::unordered_map<std::string,TypedName> const &constants,
+    std::unordered_map<std::string,size_t> const &action_parameters,
+    std::string const &action_name) const {
+    for (auto const &condition : propositional_conditions) {
+        if (!condition.validate(constants, action_parameters, action_name)) {
+            return false;
+        }
+    }
+    for (auto const &condition : numeric_conditions) {
+        if (!condition.validate(constants, action_parameters, action_name)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::ostream& operator<<(std::ostream &stream, Condition const &condition) {
+    stream << "( and ";
+    for (auto const &part : condition.propositional_conditions) {
+        stream << part << " ";
+    }
+    for (auto const &part : condition.numeric_conditions) {
+        stream << part << " ";
+    }
+    stream << ")";
+    return stream;
 }
 
 } // namespace pddl_parser

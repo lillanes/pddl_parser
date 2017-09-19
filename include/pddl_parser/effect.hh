@@ -12,27 +12,7 @@
 
 namespace pddl_parser {
 
-struct CanonicalEffect;
-
-struct EffectBase {
-    virtual bool validate(
-        std::unordered_map<std::string,TypedName> const &constants,
-        std::unordered_map<std::string,size_t> const &action_parameters,
-        std::string const &action_name) const = 0;
-    virtual CanonicalEffect canonicalize() const = 0;
-    friend std::ostream& operator<<(std::ostream &stream,
-                                    EffectBase const &effect);
-
-protected:
-    friend class CopyableUniquePtr<EffectBase>;
-    virtual EffectBase * clone() const = 0;
-    virtual void print(std::ostream &stream) const = 0;
-
-};
-
-typedef CopyableUniquePtr<EffectBase> Effect;
-
-struct PropositionalEffect : public EffectBase {
+struct PropositionalEffect {
     std::string predicate_name;
     std::deque<std::string> parameters;
     bool is_add;
@@ -45,11 +25,9 @@ struct PropositionalEffect : public EffectBase {
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
-    CanonicalEffect canonicalize() const;
 
-private:
-    EffectBase * clone() const;
-    void print(std::ostream &stream) const;
+    friend std::ostream& operator<<(std::ostream &stream,
+                                    PropositionalEffect const &effect);
 };
 
 enum AssignmentOperator {
@@ -60,7 +38,7 @@ enum AssignmentOperator {
     DECREASE
 };
 
-struct NumericEffect : public EffectBase {
+struct NumericEffect {
     AssignmentOperator assignment_operator;
     std::string function_name;
     std::deque<std::string> parameters;
@@ -70,16 +48,34 @@ struct NumericEffect : public EffectBase {
                   std::string &&function_name,
                   std::deque<std::string> &&parameters,
                   NumericExpression &&expression);
-    CanonicalEffect canonicalize() const;
 
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,
         std::unordered_map<std::string,size_t> const &action_parameters,
         std::string const &action_name) const;
 
-private:
-    EffectBase * clone() const;
-    void print(std::ostream &stream) const;
+    friend std::ostream& operator<<(std::ostream &stream,
+                                    NumericEffect const &effect);
+};
+
+struct Effect {
+    std::deque<PropositionalEffect> propositional_effects;
+    std::deque<NumericEffect> numeric_effects;
+
+    Effect() = default;
+    Effect(PropositionalEffect &&propositional_effect);
+    Effect(NumericEffect &&numeric_effect);
+    Effect(std::deque<PropositionalEffect> &&propositional_effects,
+           std::deque<NumericEffect> &&numeric_effects);
+
+    void join_with(Effect &&other);
+
+    bool validate(
+        std::unordered_map<std::string,TypedName> const &constants,
+        std::unordered_map<std::string,size_t> const &action_parameters,
+        std::string const &action_name) const;
+
+    friend std::ostream& operator<<(std::ostream &stream, Effect const &effect);
 };
 
 } // namespace pddl_parser

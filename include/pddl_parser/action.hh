@@ -18,13 +18,13 @@ struct Action {
     std::unordered_map<std::string, size_t> parameters_map;
     std::deque<TypedName> parameters;
     Condition condition;
-    std::deque<Effect> effects;
+    Effect effect;
 
     Action() = default;
     Action(std::string &&name,
            std::deque<TypedName> &&parameters,
            Condition &&condition,
-           std::deque<Effect> &&effects);
+           Effect &&effect);
 
     bool validate(
         std::unordered_map<std::string,TypedName> const &types,

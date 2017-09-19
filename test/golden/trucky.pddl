@@ -19,7 +19,7 @@
     :effect ( and ( not ( at ?b ?l ) ) ( in ?b ?t ) ( increase ( weight ?t ) ( weight ?b ) ) ) )
   ( :action move
     :parameters ( ?t - truck ?from - location ?to - location )
-    :precondition ( at ?t ?from )
+    :precondition ( and ( at ?t ?from ) )
     :effect ( and ( not ( at ?t ?from ) ) ( at ?t ?to ) ) )
   ( :action unload
     :parameters ( ?t - truck ?b - box ?l - location )
