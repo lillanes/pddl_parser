@@ -16,10 +16,12 @@ struct PropositionalEffect {
     std::string predicate_name;
     std::deque<std::string> parameters;
     bool is_add;
+    bool is_maybe;
 
     PropositionalEffect(std::string &&predicate_name,
                         std::deque<std::string> &&parameters,
-                        bool is_add);
+                        bool is_add,
+                        bool is_maybe=false);
 
     bool validate(
         std::unordered_map<std::string,TypedName> const &constants,

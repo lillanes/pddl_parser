@@ -102,6 +102,7 @@
   MINIMIZE            "minimize"
   AND                 "and"
   NOT                 "not"
+  MAYBE               "maybe"
   L                   "<"
   LEQ                 "<="
   EQ                  "="
@@ -457,9 +458,23 @@ p_effect:
     {
         $$ = Effect(PropositionalEffect(std::move($2), std::move($3), true));
     }
+  | "(" "maybe" "(" NAME term_star ")" ")"
+    {
+        $$ = Effect(PropositionalEffect(std::move($4),
+                                        std::move($5),
+                                        true,
+                                        true));
+    }
   | "(" "not" "(" NAME term_star ")" ")"
     {
         $$ = Effect(PropositionalEffect(std::move($4), std::move($5), false));
+    }
+  | "(" "maybe" "(" "not" "(" NAME term_star ")" ")" ")"
+    {
+        $$ = Effect(PropositionalEffect(std::move($6),
+                                        std::move($7),
+                                        false,
+                                        true));
     }
   | "(" "assign" f_head f_exp ")"
     {

@@ -78,6 +78,8 @@
 
 "not" { return pddl_parser::Parser::make_NOT(location); }
 
+"maybe" { return pddl_parser::Parser::make_MAYBE(location); }
+
 "<"  { return pddl_parser::Parser::make_L(location); }
 
 "<="  { return pddl_parser::Parser::make_LEQ(location); }

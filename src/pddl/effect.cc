@@ -7,10 +7,12 @@ namespace pddl_parser {
 
 PropositionalEffect::PropositionalEffect(std::string &&predicate_name,
                                          std::deque<std::string> &&parameters,
-                                         bool is_add)
+                                         bool is_add,
+                                         bool is_maybe)
     : predicate_name(std::move(predicate_name)),
       parameters(std::move(parameters)),
-      is_add(is_add) {
+      is_add(is_add),
+      is_maybe(is_maybe) {
 }
 
 bool PropositionalEffect::validate(
@@ -32,6 +34,9 @@ bool PropositionalEffect::validate(
 
 std::ostream& operator<<(std::ostream &stream,
                          PropositionalEffect const &effect) {
+    if (effect.is_maybe) {
+        stream << "( maybe ";
+    }
     if (!effect.is_add) {
         stream << "( not ";
     }
@@ -41,6 +46,9 @@ std::ostream& operator<<(std::ostream &stream,
     }
     stream << ")";
     if (!effect.is_add) {
+        stream << " )";
+    }
+    if (effect.is_maybe) {
         stream << " )";
     }
     return stream;
