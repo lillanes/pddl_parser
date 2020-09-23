@@ -1,7 +1,7 @@
 %skeleton "lalr1.cc" /* -*- C++ -*- */
-%require "3.0.2"
+%require "3.7.2"
 %defines
-%define parser_class_name { Parser }
+%define api.parser.class { Parser }
 
 // We are using C++, the parser will return objects.
 %define api.token.constructor
@@ -12,7 +12,7 @@
  * Bison uses std::string, and making that const seems better than actually
  * storing a non-const copy of filenames somewhere.
  */
-%define filename_type {const std::string}
+%define api.filename.type {const std::string}
 
 %code requires
 {
