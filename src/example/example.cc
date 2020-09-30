@@ -49,7 +49,6 @@ int main(int const argc, char const **argv) {
                 valid = false;
             }
             for (int i = 2; i < argc; ++i) {
-                timer.start();
                 Instance instance = parse_instance(argv[i]);
                 std::cout << instance;
             }
